@@ -146,17 +146,16 @@ const statusStyle: Record<string, string> = {
 
 export default function Projects() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="projects" className="relative py-28 lg:py-36">
+    <section id="projects" ref={ref} className="relative py-28 lg:py-36">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14"
         >
           <div>
@@ -178,9 +177,9 @@ export default function Projects() {
             return (
               <motion.div
                 key={p.num}
-                initial={{ opacity: 0, y: 36 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.35, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
                 className={`relative col-span-1 lg:col-span-6 ${p.span} bg-card border-2 border-ink p-7 lg:p-9 flex flex-col justify-between hover-raise cursor-pointer`}
                 onClick={() => setOpen(isOpen ? null : i)}
               >

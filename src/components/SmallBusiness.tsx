@@ -15,7 +15,7 @@ const included = [
 
 export default function SmallBusiness() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const go = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -23,9 +23,9 @@ export default function SmallBusiness() {
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.4 }}
             className="lg:col-span-7"
           >
             <div className="t-label text-verm mb-5">(08) · SMALL BUSINESS SPECIAL</div>

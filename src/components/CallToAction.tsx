@@ -24,7 +24,7 @@ Whenever you're ready to talk.`,
 
 export default function CallToAction() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
 
   const goContact = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
 
@@ -37,9 +37,9 @@ export default function CallToAction() {
 
       <div className="relative max-w-[1440px] mx-auto px-5 lg:px-10 py-24 lg:py-32">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="flex items-center gap-2.5 t-label text-lime mb-8"
         >
           <Sparkles className="w-4 h-4" />

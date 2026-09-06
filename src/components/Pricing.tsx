@@ -53,20 +53,19 @@ const compare = [
 
 export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [tab, setTab] = useState<'web' | 'mobile'>('web');
   const plans = tab === 'web' ? web : mobile;
 
   const go = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section id="pricing" className="relative py-28 lg:py-36 bg-paper-2 border-y-2 border-ink">
+    <section id="pricing" ref={ref} className="relative py-28 lg:py-36 bg-paper-2 border-y-2 border-ink">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="grid lg:grid-cols-12 gap-8 items-end mb-14"
         >
           <div className="lg:col-span-7">
@@ -119,9 +118,9 @@ export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
           {plans.map((p, i) => (
             <motion.div
               key={p.name}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.35, delay: i * 0.04 }}
               className={`relative flex flex-col p-8 border-2 transition-transform hover:-translate-y-1 ${
                 p.featured
                   ? 'bg-ink text-paper border-ink hard-shadow-verm'

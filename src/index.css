@@ -19,7 +19,12 @@
   --color-lime: #b8e62e;
 }
 
-html { scroll-behavior: smooth; }
+/* Smooth scrolling for anchor focus without fighting mobile touch momentum */
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+}
 
 body {
   font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;

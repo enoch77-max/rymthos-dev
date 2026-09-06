@@ -12,16 +12,15 @@ const steps = [
 
 export default function Process() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
 
   return (
-    <section className="relative py-28 lg:py-32 bg-paper-2 border-y-2 border-ink overflow-hidden">
+    <section id="process" ref={ref} className="relative py-28 lg:py-32 bg-paper-2 border-y-2 border-ink overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14"
         >
           <div>
@@ -41,9 +40,9 @@ export default function Process() {
           {steps.map((s, i) => (
             <motion.div
               key={s.n}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              transition={{ duration: 0.35, delay: i * 0.03 }}
               className="relative bg-card border-2 border-ink p-6 lg:p-7 hover-raise group overflow-hidden"
             >
               {/* connecting flow number watermark */}

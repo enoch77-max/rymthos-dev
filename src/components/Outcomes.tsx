@@ -15,16 +15,15 @@ const go = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior
 
 export default function Outcomes() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
 
   return (
-    <section id="outcomes" className="relative py-28 lg:py-36">
+    <section id="outcomes" ref={ref} className="relative py-28 lg:py-36">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="grid lg:grid-cols-12 gap-8 mb-14 items-end"
         >
           <div className="lg:col-span-7">
@@ -46,9 +45,9 @@ export default function Outcomes() {
               type="button"
               key={r.note}
               onClick={() => go(r.to)}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.07 }}
+              transition={{ duration: 0.35, delay: i * 0.03 }}
               className="group bg-card border-2 border-ink p-6 hover-raise text-left cursor-pointer w-full"
               aria-label={`${r.after} — ${r.cta}`}
             >

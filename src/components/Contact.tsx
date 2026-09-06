@@ -50,7 +50,7 @@ const methods = [
 
 export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) => void }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [via, setVia] = useState<'inbox' | 'whatsapp'>('inbox');
   const [agree, setAgree] = useState(false);
@@ -175,13 +175,12 @@ export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) =>
   const label = 't-label text-mut block mb-2';
 
   return (
-    <section id="contact" className="relative py-28 lg:py-36 bg-paper-2 border-t-2 border-ink">
+    <section id="contact" ref={ref} className="relative py-28 lg:py-36 bg-paper-2 border-t-2 border-ink">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="mb-16"
         >
           <div className="t-label text-verm mb-5">(12) · CONTACT</div>

@@ -72,7 +72,7 @@ const slides = [
 
 export default function DemoShowcase() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragX, setDragX] = useState(0);
@@ -109,16 +109,15 @@ export default function DemoShowcase() {
   const s = slides[idx];
 
   return (
-    <section className="relative py-28 lg:py-36 bg-ink text-paper overflow-hidden">
+    <section id="showroom" ref={ref} className="relative py-28 lg:py-36 bg-ink text-paper overflow-hidden">
       <div className="absolute -top-40 right-[-10%] w-[560px] h-[560px] bg-verm/10 rounded-full blur-[180px] animate-floaty" />
       <div className="absolute bottom-[-20%] left-[-8%] w-[460px] h-[460px] bg-lime/8 rounded-full blur-[160px] animate-floaty" style={{ animationDelay: '2s' }} />
 
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10 relative">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>

@@ -200,7 +200,7 @@ function AfterStore() {
 /* ---- helpers ---- */
 function Count({ to, decimals = 0, suffix = '' }: { to: number; decimals?: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const inView = useInView(ref, { once: true, margin: '60px 0px' });
   const reduced = useReducedMotion();
   const [v, setV] = useState(0);
   useEffect(() => {
@@ -227,7 +227,7 @@ function Count({ to, decimals = 0, suffix = '' }: { to: number; decimals?: numbe
 export default function WhyUs() {
   const ref = useRef(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const reduced = useReducedMotion();
   const [pos, setPos] = useState(50);
   const [dragging, setDragging] = useState(false);
@@ -239,6 +239,7 @@ export default function WhyUs() {
     if (!el) return;
     const ro = new ResizeObserver(() => setWidth(el.clientWidth));
     ro.observe(el);
+    setWidth(el.clientWidth);
     return () => ro.disconnect();
   }, []);
 
@@ -271,13 +272,12 @@ export default function WhyUs() {
   const scale = width ? width / STAGE_W : 0;
 
   return (
-    <section id="why-us" className="relative py-24 lg:py-32 bg-paper-2 border-y-2 border-ink overflow-hidden">
+    <section id="why-us" ref={ref} className="relative py-24 lg:py-32 bg-paper-2 border-y-2 border-ink overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           className="text-center mb-10"
         >
           <div className="t-label text-verm mb-4">(03) · HARD TRUTHS</div>

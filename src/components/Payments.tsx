@@ -26,16 +26,15 @@ function LogoRow({ logos, reverse = false }: { logos: PaymentLogo[]; reverse?: b
 
 export default function Payments() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
 
   return (
-    <section id="payments" className="relative py-28 lg:py-36 overflow-hidden">
+    <section id="payments" ref={ref} className="relative py-28 lg:py-36 overflow-hidden">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="grid lg:grid-cols-12 gap-8 items-end mb-14"
         >
           <div className="lg:col-span-8">
@@ -58,7 +57,7 @@ export default function Payments() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
         className="border-y-2 border-ink divide-y-2 divide-ink bg-paper"
       >
         <LogoRow logos={globalLogos} />

@@ -76,17 +76,16 @@ const trust = [
 
 export default function Assurance() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="assurance" className="relative py-28 lg:py-36 bg-paper-2 border-y-2 border-ink">
+    <section id="assurance" ref={ref} className="relative py-28 lg:py-36 bg-paper-2 border-y-2 border-ink">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.4 }}
           className="mb-14"
         >
           <div className="t-label text-verm mb-5">(11) · NO SURPRISES</div>

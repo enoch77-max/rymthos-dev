@@ -81,22 +81,21 @@ function Detail({ s }: { s: typeof services[0] }) {
 
 export default function Services() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true, margin: '120px 0px' });
   const [active, setActive] = useState(0);
   const cur = services[Math.max(active, 0)];
 
   return (
-    <section id="services" className="relative py-24 lg:py-32">
+    <section id="services" ref={ref} className="relative py-24 lg:py-32">
       <div className="max-w-[1440px] mx-auto px-5 lg:px-10">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-14">
           {/* Sticky rail: heading + live detail */}
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-28">
               <motion.div
-                ref={ref}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 18 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: 0.4 }}
               >
                 <div className="t-label text-verm mb-5">(01) · SERVICES</div>
                 <h2 className="t-display text-5xl lg:text-7xl text-ink mb-5">
@@ -140,9 +139,9 @@ export default function Services() {
               return (
                 <motion.div
                   key={s.num}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.45, delay: i * 0.05 }}
+                  transition={{ duration: 0.35, delay: i * 0.03 }}
                 >
                   <button
                     onMouseEnter={() => setActive(i)}
