@@ -188,7 +188,11 @@ export const globalLogos: PaymentLogo[] = [
     name: 'Flutterwave',
     node: (
       <span className={wrap} title="Flutterwave">
-        <Mark slug="flutterwave" color="#F5A623" className="h-7 w-9" />
+        <svg viewBox="0 0 24 24" className="h-7 w-8" aria-hidden fill="none">
+          <path d="M4 6C4 6 8.5 7 11.5 10C14.5 13 15.5 18 15.5 18" stroke="#F5A623" strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M8.5 6C8.5 6 13 7 16 10C19 13 20 18 20 18" stroke="#E31E24" strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M4 12C4 12 7 13 9 15C11 17 11.5 20 11.5 20" stroke="#00A9E0" strokeWidth="2.8" strokeLinecap="round" />
+        </svg>
         <span className="font-bold text-[1.3rem] text-ink tracking-tight">Flutterwave</span>
       </span>
     ),

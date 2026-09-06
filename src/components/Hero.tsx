@@ -182,7 +182,7 @@ export default function Hero() {
           </div>
 
           {/* ===== Right: founder dossier — a personnel file, not a poster ===== */}
-          <div className="lg:col-span-5 relative lg:self-stretch flex">
+          <div className="lg:col-span-5 relative lg:self-start flex">
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
