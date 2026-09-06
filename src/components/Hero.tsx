@@ -207,10 +207,10 @@ export default function Hero() {
                   <span className="absolute inset-0 translate-x-2 translate-y-2 bg-verm" aria-hidden />
                   <div className="relative w-28 lg:w-36 border-2 border-ink bg-ink overflow-hidden">
                     <img
-                      src="https://i.postimg.cc/7LmBHj90/Man-wearing-structured-coat-2K-202608122133-1.jpg"
+                      src="/photo.jpg"
                       onError={(e) => {
                         const t = e.currentTarget as HTMLImageElement;
-                        if (!t.src.includes('/photo.jpg')) t.src = '/photo.jpg';
+                        if (!t.src.includes('postimg.cc')) t.src = 'https://i.postimg.cc/7LmBHj90/Man-wearing-structured-coat-2K-202608122133-1.jpg';
                       }}
                       alt="Md. Billal Hossain"
                       style={{ objectPosition: '50% 18%' }}

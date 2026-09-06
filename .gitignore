@@ -6,3 +6,4 @@ dist/
 .insforge/
 *.local
 .DS_Store
+backend/supabase/functions/_shared/secrets.ts

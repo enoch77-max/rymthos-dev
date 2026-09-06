@@ -3,6 +3,7 @@
 // Supabase database persistence, Telegram founder alerts, and branded HTML ack emails.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
+import { SECRETS } from "../_shared/secrets.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,12 +24,12 @@ interface LeadPayload {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") ?? "";
-const OPENROUTER_MODEL = Deno.env.get("OPENROUTER_MODEL") ?? "deepseek/deepseek-v4-flash";
-const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
-const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID") ?? "";
-const GMAIL_APP_USER = Deno.env.get("GMAIL_APP_USER") ?? "rymthos.dev@gmail.com";
-const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD") ?? "";
+const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || SECRETS.OPENROUTER_API_KEY;
+const OPENROUTER_MODEL = Deno.env.get("OPENROUTER_MODEL") || SECRETS.OPENROUTER_MODEL;
+const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") || SECRETS.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID") || SECRETS.TELEGRAM_CHAT_ID;
+const GMAIL_APP_USER = Deno.env.get("GMAIL_APP_USER") || SECRETS.GMAIL_APP_USER;
+const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD") || SECRETS.GMAIL_APP_PASSWORD;
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 
 Deno.serve(async (req: Request) => {

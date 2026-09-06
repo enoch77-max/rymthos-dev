@@ -3,6 +3,7 @@
 // Live header checks, DOM inspection, e-commerce flaw analysis, and DeepSeek AI synthesis.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
+import { SECRETS } from "../_shared/secrets.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,10 +21,10 @@ const BLACKLISTED_DOMAINS = [
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") ?? "";
-const OPENROUTER_MODEL = Deno.env.get("OPENROUTER_MODEL") ?? "deepseek/deepseek-v4-flash";
-const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
-const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID") ?? "";
+const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || SECRETS.OPENROUTER_API_KEY;
+const OPENROUTER_MODEL = Deno.env.get("OPENROUTER_MODEL") || SECRETS.OPENROUTER_MODEL;
+const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") || SECRETS.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID") || SECRETS.TELEGRAM_CHAT_ID;
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {

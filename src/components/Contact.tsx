@@ -344,10 +344,10 @@ export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) =>
             {/* who answers — identity at the moment of commitment */}
             <div className="flex items-center gap-4 bg-ink text-paper p-4">
               <img
-                src="https://i.postimg.cc/7LmBHj90/Man-wearing-structured-coat-2K-202608122133-1.jpg"
+                src="/photo.jpg"
                 onError={(e) => {
                   const t = e.currentTarget as HTMLImageElement;
-                  if (!t.src.includes('/photo.jpg')) t.src = '/photo.jpg';
+                  if (!t.src.includes('postimg.cc')) t.src = 'https://i.postimg.cc/7LmBHj90/Man-wearing-structured-coat-2K-202608122133-1.jpg';
                 }}
                 alt="Md. Billal Hossain"
                 loading="lazy"
