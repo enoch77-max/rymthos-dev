@@ -167,23 +167,30 @@ Deno.serve(async (req: Request) => {
     });
 
     // 6. Save to Supabase (if configured)
+    let auditId: string | null = null;
     if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
       try {
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-        await supabase.from("audit_reports").insert([
-          {
-            url: targetUrl,
-            domain: host,
-            site_type: analysis.siteType,
-            health_score: analysis.score,
-            critical_issues: analysis.criticalIssues,
-            warnings: analysis.warnings,
-            passed_checks: analysis.passedChecks,
-            business_impact: analysis.businessImpact,
-            estimated_recovery: analysis.estimatedRecovery,
-            tech_stack_detected: analysis.techStack || [],
-          },
-        ]);
+        const { data: dbData } = await supabase
+          .from("audit_reports")
+          .insert([
+            {
+              url: targetUrl,
+              domain: host,
+              site_type: analysis.siteType,
+              health_score: analysis.score,
+              critical_issues: analysis.criticalIssues,
+              warnings: analysis.warnings,
+              passed_checks: analysis.passedChecks,
+              business_impact: analysis.businessImpact,
+              estimated_recovery: analysis.estimatedRecovery,
+              tech_stack_detected: analysis.techStack || [],
+            },
+          ])
+          .select("id")
+          .single();
+
+        if (dbData) auditId = dbData.id;
       } catch (dbErr) {
         console.error("DB Save Error:", dbErr);
       }
@@ -197,10 +204,23 @@ Deno.serve(async (req: Request) => {
         `Critical: ${analysis.criticalIssues.length} | Warnings: ${analysis.warnings.length}\n` +
         `<i>${analysis.businessImpact.slice(0, 200)}...</i>`;
 
+      const inlineKeyboard = auditId
+        ? {
+            inline_keyboard: [
+              [{ text: "💡 Pitch Angle", callback_data: `pitch:${auditId}` }],
+            ],
+          }
+        : undefined;
+
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: alertText, parse_mode: "HTML" }),
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: alertText,
+          parse_mode: "HTML",
+          reply_markup: inlineKeyboard,
+        }),
       }).catch(() => {});
     }
 

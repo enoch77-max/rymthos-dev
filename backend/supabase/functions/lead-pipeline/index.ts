@@ -95,6 +95,7 @@ Deno.serve(async (req: Request) => {
 
     // 3. Dispatch Telegram Notification to Founder
     await sendTelegramAlert({
+      leadId,
       name,
       email,
       projectType,
@@ -185,6 +186,7 @@ async function analyzeLeadWithAI(lead: {
 }
 
 async function sendTelegramAlert(params: {
+  leadId: string | null;
   name: string;
   email: string;
   projectType: string;
@@ -195,7 +197,7 @@ async function sendTelegramAlert(params: {
 }) {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
 
-  const scoreEmoji = params.ai.score >= 8 ? "🔥" : params.ai.score >= 5 ? "⚡" : "📩";
+  const scoreEmoji = params.ai.score >= 8 ? "🔥" : params.ai.score >= 5 ? "⚡" : "📌";
   const text =
     `${scoreEmoji} <b>NEW CLIENT LEAD</b> — Score: <b>${params.ai.score}/10</b> [${params.ai.urgency.toUpperCase()}]\n\n` +
     `👤 <b>Client:</b> ${params.name} (<a href="mailto:${params.email}">${params.email}</a>)\n` +
@@ -204,6 +206,20 @@ async function sendTelegramAlert(params: {
     `💬 <b>Client Brief:</b>\n<i>${params.message}</i>\n\n` +
     `🤖 <b>AI Triage:</b> ${params.ai.summary}\n\n` +
     (params.ai.draftReply ? `✉️ <b>Suggested Reply:</b>\n<i>${params.ai.draftReply}</i>` : "");
+
+  const inlineKeyboard = params.leadId
+    ? {
+        inline_keyboard: [
+          [
+            { text: "✉️ View AI Reply", callback_data: `reply:${params.leadId}` },
+            { text: "💡 Deal Strategy", callback_data: `strat:${params.leadId}` },
+          ],
+          [
+            { text: "🏷️ Mark Contacted", callback_data: `contacted:${params.leadId}` },
+          ],
+        ],
+      }
+    : undefined;
 
   try {
     await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -214,6 +230,7 @@ async function sendTelegramAlert(params: {
         text,
         parse_mode: "HTML",
         disable_web_page_preview: true,
+        reply_markup: inlineKeyboard,
       }),
     });
   } catch (e) {
