@@ -291,7 +291,7 @@ export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) =>
                     </span>
                   </button>
                   <span className="t-label text-mut">
-                    {WEB3FORMS_KEY ? 'Sent straight to our inbox' : 'Delivered via WhatsApp'} or{' '}
+                    {API_ENDPOINT || WEB3FORMS_KEY ? 'Sent straight to our inbox' : 'Delivered via WhatsApp'} or{' '}
                     <button type="button" onClick={openEmail} className="text-ink underline decoration-verm decoration-2 underline-offset-2 hover:text-verm transition-colors">email</button>
                   </span>
                 </div>
