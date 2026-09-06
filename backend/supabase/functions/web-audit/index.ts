@@ -259,11 +259,19 @@ Deno.serve(async (req: Request) => {
     const hasHsts = headers.has("strict-transport-security");
     const hasCsp = headers.has("content-security-policy");
     const hasXFrame = headers.has("x-frame-options");
+    const hasNosniff = headers.get("x-content-type-options")?.toLowerCase() === "nosniff";
+    const serverBanner = headers.get("server") || "hidden";
+    const setCookie = headers.get("set-cookie") || "";
+    const cookieMissingHttpOnly = Boolean(setCookie && !setCookie.toLowerCase().includes("httponly"));
     const isHttps = response.url.startsWith("https://");
 
     // Memory-safe HTML extraction (max 64KB)
     const html = await readHtmlStream(response, 64_000);
     const lowerHtml = html.toLowerCase();
+
+    // DOM Security & Vulnerability Features
+    const hasDomXssSinks = /innerHTML\s*=|document\.write\s*\(|eval\s*\(/i.test(html);
+    const scriptsWithoutSri = (html.match(/<script[^>]+src=["']https?:\/\/[^"']+["'](?![^>]*integrity=)[^>]*>/gi) || []).length;
 
     // 6. DOM & Visual Feature Extraction
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
@@ -296,7 +304,7 @@ Deno.serve(async (req: Request) => {
       /[\u0980-\u09FF]/.test(html) ||
       /bKash|Nagad|Rocket|Taka|Dhaka|Chittagong/i.test(html);
 
-    // 7. Plain-Language AI Synthesis via DeepSeek V4 Flash
+    // 7. Plain-Language AI Synthesis via DeepSeek V4 Flash 0731
     const analysis = await synthesizeAuditWithAI({
       domain: host,
       targetUrl,
@@ -307,6 +315,11 @@ Deno.serve(async (req: Request) => {
       hasHsts,
       hasCsp,
       hasXFrame,
+      hasNosniff,
+      serverBanner,
+      cookieMissingHttpOnly,
+      hasDomXssSinks,
+      scriptsWithoutSri,
       hasViewport: hasProperViewport,
       hasOgImage,
       usesGoogleFonts,

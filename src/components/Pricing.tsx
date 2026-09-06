@@ -90,18 +90,29 @@ const mobile: Plan[] = [
   },
 ];
 
-export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
+export default function Pricing({
+  currency = 'USD',
+  onCurrencyChange,
+  onEstimate,
+}: {
+  currency?: 'USD' | 'BDT';
+  onCurrencyChange?: (c: 'USD' | 'BDT') => void;
+  onEstimate: () => void;
+}) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [tab, setTab] = useState<'web' | 'mobile'>('web');
-  const [currency, setCurrency] = useState<'USD' | 'BDT'>('USD');
+  const [localCurrency, setLocalCurrency] = useState<'USD' | 'BDT'>('USD');
+  const activeCurrency = onCurrencyChange ? currency : localCurrency;
+  const setCurr = (c: 'USD' | 'BDT') => (onCurrencyChange ? onCurrencyChange(c) : setLocalCurrency(c));
+
   const plans = tab === 'web' ? web : mobile;
 
   const compare = [
-    ['Typical agency', currency === 'USD' ? '$3,000–$10,000' : '৳350,000–৳1,000,000', '2–4 months'],
-    ['Freelance marketplaces', currency === 'USD' ? '$500–$2,000' : '৳60,000–৳240,000', 'Unpredictable'],
-    ['Template resellers', currency === 'USD' ? '$200–$600' : '৳25,000–৳70,000', 'Generic output'],
-    ['Rymthos Dev', currency === 'USD' ? 'From $179' : 'From ৳19,990', '7–14 days'],
+    ['Typical agency', activeCurrency === 'USD' ? '$3,000–$10,000' : '৳350,000–৳1,000,000', '2–4 months'],
+    ['Freelance marketplaces', activeCurrency === 'USD' ? '$500–$2,000' : '৳60,000–৳240,000', 'Unpredictable'],
+    ['Template resellers', activeCurrency === 'USD' ? '$200–$600' : '৳25,000–৳70,000', 'Generic output'],
+    ['Rymthos Dev', activeCurrency === 'USD' ? 'From $179' : 'From ৳19,990', '7–14 days'],
   ];
 
   const go = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -146,13 +157,56 @@ export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
                 {(['USD', 'BDT'] as const).map((c) => (
                   <button
                     key={c}
-                    onClick={() => setCurrency(c)}
-                    className={`t-label px-3.5 py-2.5 transition-colors ${currency === c ? 'bg-verm text-paper' : 'text-mut hover:text-ink'}`}
+                    onClick={() => setCurr(c)}
+                    className={`t-label px-3.5 py-2.5 transition-colors ${activeCurrency === c ? 'bg-verm text-paper' : 'text-mut hover:text-ink'}`}
                   >
                     {c === 'USD' ? '$ USD' : '৳ BDT'}
                   </button>
                 ))}
               </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* why we don't charge $10k — the efficiency arbitrage */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.2 }}
+          className="mb-10 border-2 border-ink bg-card p-6 lg:p-8 hard-shadow-sm"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-ink pb-4 mb-6">
+            <div>
+              <span className="t-label text-verm">HOW WE OPERATE</span>
+              <h3 className="t-display text-2xl lg:text-3xl text-ink mt-1">
+                Why our rates look impossible next to old-school agencies.
+              </h3>
+            </div>
+            <span className="t-mono text-xs bg-lime text-ink px-3 py-1 font-semibold self-start md:self-auto border border-ink">
+              AI-ACCELERATED ENGINEERING
+            </span>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="border-l-2 border-line pl-4">
+              <div className="font-semibold text-ink text-sm mb-1">Old-School Agency</div>
+              <div className="text-xs text-verm font-mono mb-2">40-person payroll · $6k–$15k</div>
+              <p className="text-xs text-mut leading-relaxed">
+                You pay for 6 weeks of Zoom meetings, junior developer salaries, and manual boilerplate typing.
+              </p>
+            </div>
+            <div className="border-l-2 border-line pl-4">
+              <div className="font-semibold text-ink text-sm mb-1">Freelance Marketplaces</div>
+              <div className="text-xs text-mut font-mono mb-2">Unpredictable · $500–$2,000</div>
+              <p className="text-xs text-mut leading-relaxed">
+                Swapped templates, bloated plugins, uncommunicative contractors, and zero security hardening.
+              </p>
+            </div>
+            <div className="border-l-2 border-verm pl-4 bg-ink text-paper p-4">
+              <div className="font-semibold text-paper text-sm mb-1">Rymthos Dev</div>
+              <div className="text-xs text-lime font-mono mb-2">AI-Augmented Core · From $179 / ৳19,990</div>
+              <p className="text-xs text-paper/70 leading-relaxed">
+                Senior engineering standards powered by AI architecture generation. Bespoke code, 7–14 day delivery, 75% savings passed to you.
+              </p>
             </div>
           </div>
         </motion.div>
@@ -196,14 +250,14 @@ export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
               <div className="flex items-baseline justify-between mb-1">
                 <h3 className="t-display text-3xl">{p.name}</h3>
                 <span className="t-mono text-xs text-mut line-through">
-                  {currency === 'USD' ? p.market : p.bdtMarket}
+                  {activeCurrency === 'USD' ? p.market : p.bdtMarket}
                 </span>
               </div>
               <p className={`text-sm mb-6 ${p.featured ? 'text-paper/60' : 'text-mut'}`}>{p.desc}</p>
 
               <div className="flex items-end gap-2 mb-1">
                 <span className="t-display text-5xl lg:text-6xl">
-                  {currency === 'USD' ? `$${p.price}` : `৳${p.bdtPrice.toLocaleString()}`}
+                  {activeCurrency === 'USD' ? `$${p.price}` : `৳${p.bdtPrice.toLocaleString()}`}
                 </span>
                 <span className={`text-sm mb-2 ${p.featured ? 'text-paper/50' : 'text-mut'}`}>one-time</span>
               </div>

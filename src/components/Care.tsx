@@ -60,7 +60,15 @@ const outside = [
   'Anything not agreed in writing',
 ];
 
-export default function Care({ onEstimate, onContact }: { onEstimate: () => void; onContact: () => void }) {
+export default function Care({
+  currency = 'USD',
+  onEstimate,
+  onContact,
+}: {
+  currency?: 'USD' | 'BDT';
+  onEstimate: () => void;
+  onContact: () => void;
+}) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '600px 0px' });
 
@@ -147,9 +155,10 @@ export default function Care({ onEstimate, onContact }: { onEstimate: () => void
               <div className={`t-label mb-2 ${p.tone === 'light' ? 'text-mut' : 'text-paper/60'}`}>{p.tag}</div>
               <div className="flex items-baseline gap-2 mb-2">
                 <h3 className="t-display text-3xl">{p.name}</h3>
-                <span className={`t-display text-2xl ${p.tone === 'light' ? 'text-verm' : 'text-lime'}`}>{p.price}</span>
+                <span className={`t-display text-2xl ${p.tone === 'light' ? 'text-verm' : 'text-lime'}`}>
+                  {currency === 'USD' ? p.price : ('bdt' in p ? p.bdt : p.price)}
+                </span>
                 <span className={`text-sm ${p.tone === 'light' ? 'text-mut' : 'text-paper/60'}`}>{p.period}</span>
-                {'bdt' in p && <span className="text-xs opacity-50 ml-1">({p.bdt})</span>}
               </div>
               <p className={`text-sm mb-6 ${p.tone === 'light' ? 'text-mut' : 'text-paper/70'}`}>{p.desc}</p>
               <ul className="space-y-2.5 mb-7 flex-1">

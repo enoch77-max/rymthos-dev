@@ -27,6 +27,7 @@ type LegalDoc = 'terms' | 'privacy';
 export default function App() {
   const [calc, setCalc] = useState(false);
   const [legal, setLegal] = useState<LegalDoc | null>(null);
+  const [currency, setCurrency] = useState<'USD' | 'BDT'>('USD');
 
   useEffect(() => {
     document.body.style.overflow = calc || legal ? 'hidden' : '';
@@ -48,7 +49,11 @@ export default function App() {
       >
         Skip to content
       </a>
-      <Navbar onOpenCalc={() => setCalc(true)} />
+      <Navbar
+        currency={currency}
+        onToggleCurrency={setCurrency}
+        onOpenCalc={() => setCalc(true)}
+      />
       <main className="relative z-10">
         <Hero />
         <Marquee />
@@ -60,10 +65,21 @@ export default function App() {
         <DemoShowcase />
         <AuditBand />
         <Payments />
-        <Pricing onEstimate={() => setCalc(true)} />
-        <SmallBusiness />
-        <FeatureStore onContact={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })} />
-        <Care onEstimate={() => setCalc(true)} onContact={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })} />
+        <Pricing
+          currency={currency}
+          onCurrencyChange={setCurrency}
+          onEstimate={() => setCalc(true)}
+        />
+        <SmallBusiness currency={currency} />
+        <FeatureStore
+          currency={currency}
+          onContact={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
+        />
+        <Care
+          currency={currency}
+          onEstimate={() => setCalc(true)}
+          onContact={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
+        />
         <Assurance />
         <CallToAction />
         <Contact onOpenLegal={setLegal} />
@@ -71,7 +87,14 @@ export default function App() {
       <Footer onOpenLegal={setLegal} />
       <FloatingTalk />
       <MobileCTA />
-      {calc && <Calculator onClose={() => setCalc(false)} onContact={toContact} />}
+      {calc && (
+        <Calculator
+          currency={currency}
+          onCurrencyChange={setCurrency}
+          onClose={() => setCalc(false)}
+          onContact={toContact}
+        />
+      )}
       {legal && <Legal doc={legal} onClose={() => setLegal(null)} />}
     </div>
     </MotionConfig>

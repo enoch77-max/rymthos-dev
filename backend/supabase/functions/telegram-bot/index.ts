@@ -359,22 +359,81 @@ async function handleDeepPentest(chatId: number | string, rawDomain: string, use
   let telemetry: Record<string, unknown> = { domain, url: targetUrl };
   try {
     const startTime = performance.now();
-    const res = await fetch(targetUrl, {
+
+    // Parallel multi-vector passive probe
+    const probeTarget = fetch(targetUrl, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 RymthosDeepPentest/1.0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 RymthosDeepPentest/2.0",
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
       signal: AbortSignal.timeout(9000),
     });
 
+    const probeRobots = fetch("https://" + domain + "/robots.txt", {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; RymthosInspector/2.0)" },
+      signal: AbortSignal.timeout(4000),
+    }).catch(() => null);
+
+    const probeEnv = fetch("https://" + domain + "/.env", {
+      method: "HEAD",
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; RymthosInspector/2.0)" },
+      signal: AbortSignal.timeout(4000),
+    }).catch(() => null);
+
+    const [mainResult, robotsResult, envResult] = await Promise.allSettled([
+      probeTarget,
+      probeRobots,
+      probeEnv,
+    ]);
+
+    if (mainResult.status !== "fulfilled" || !mainResult.value) {
+      throw new Error("Unable to establish HTTP connection to target.");
+    }
+
+    const res = mainResult.value;
     const latency = Math.round(performance.now() - startTime);
     const headers = res.headers;
-    const hasCsp = headers.has("content-security-policy");
-    const hasHsts = headers.has("strict-transport-security");
-    const hasXFrame = headers.has("x-frame-options");
+
+    // Security Headers Matrix
+    const csp = headers.get("content-security-policy");
+    const hasCsp = Boolean(csp);
+    const cspHasUnsafe = csp ? /unsafe-inline|unsafe-eval/i.test(csp) : false;
+
+    const hsts = headers.get("strict-transport-security");
+    const hasHsts = Boolean(hsts);
+    const hstsPreload = hsts ? /preload/i.test(hsts) : false;
+    const hstsSubdomains = hsts ? /includesubdomains/i.test(hsts) : false;
+
+    const xFrame = headers.get("x-frame-options");
+    const hasXFrame = Boolean(xFrame);
+
+    const contentTypeOptions = headers.get("x-content-type-options");
+    const hasNosniff = contentTypeOptions?.toLowerCase() === "nosniff";
+
+    const referrerPolicy = headers.get("referrer-policy") || "missing (potential path/token referrer leakage)";
+    const permissionsPolicy = headers.get("permissions-policy") || "missing (unconstrained browser hardware APIs)";
     const cors = headers.get("access-control-allow-origin") || "restricted";
     const serverBanner = headers.get("server") || "hidden";
+    const xPoweredBy = headers.get("x-powered-by") || "hidden";
 
+    // Cookie Security Audit
+    const setCookie = headers.get("set-cookie") || "";
+    const hasCookies = Boolean(setCookie);
+    const cookieHttpOnly = hasCookies ? setCookie.toLowerCase().includes("httponly") : true;
+    const cookieSecure = hasCookies ? setCookie.toLowerCase().includes("secure") : true;
+    const cookieSameSite = hasCookies ? /samesite=(?:strict|lax|none)/i.test(setCookie) : true;
+
+    // Sensitive Disclosures from robots.txt and .env
+    let robotsDisclosures: string[] = [];
+    if (robotsResult.status === "fulfilled" && robotsResult.value && robotsResult.value.ok) {
+      const robotsText = await robotsResult.value.text().catch(() => "");
+      const disallows = robotsText.match(/Disallow:\s*([^\r\n]+)/gi) || [];
+      robotsDisclosures = disallows.slice(0, 6).map((d) => d.replace(/Disallow:\s*/i, "").trim());
+    }
+
+    const exposedEnvFile = envResult.status === "fulfilled" && envResult.value?.status === 200;
+
+    // Stream HTML Body for DOM Feature & Vulnerability Analysis
     const reader = res.body?.getReader();
     let html = "";
     if (reader) {
@@ -392,26 +451,58 @@ async function handleDeepPentest(chatId: number | string, rawDomain: string, use
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
     const hasViewport = /width=device-width/i.test(html);
     const hasForms = /<form/i.test(html);
-    const hasInputs = /<input/i.test(html);
-    const hasScripts = /<script/i.test(html);
-    const usesGoogleFonts = /fonts\.(?:googleapis|gstatic)\.com/i.test(html);
+    const hasPasswordInput = /<input[^>]+type=["']password["']/i.test(html);
+    const hasInsecureFormAction = /<form[^>]+action=["']http:\/\//i.test(html);
+
+    // DOM XSS Sink patterns in scripts
+    const hasDomXssSinks = /innerHTML\s*=|document\.write\s*\(|eval\s*\(/i.test(html);
+
+    // Subresource Integrity (SRI) gap count
+    const scriptsWithoutSri = (html.match(/<script[^>]+src=["']https?:\/\/[^"']+["'](?![^>]*integrity=)[^>]*>/gi) || []).length;
+
+    // Exposed API key indicators
+    const exposedStripeKey = /pk_(?:live|test)_[a-zA-Z0-9]{20,}/i.test(html);
+    const exposedGoogleKey = /AIza[0-9A-Za-z-_]{35}/i.test(html);
 
     telemetry = {
       domain,
       url: targetUrl,
       latencyMs: latency,
-      pageTitle: titleMatch ? titleMatch[1].trim() : domain,
-      hasCsp,
-      hasHsts,
-      hasXFrame,
-      cors,
-      serverBanner,
-      hasViewport,
-      hasForms,
-      hasInputs,
-      hasScripts,
-      usesGoogleFonts,
-      snippet: html.slice(0, 3000).replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<script[\s\S]*?<\/script>/gi, ""),
+      pageTitle: titleMatch ? titleMatch[1].trim().slice(0, 100) : domain,
+      securityHeaders: {
+        hasCsp,
+        cspHasUnsafe,
+        hasHsts,
+        hstsSubdomains,
+        hstsPreload,
+        hasXFrame,
+        hasNosniff,
+        referrerPolicy,
+        permissionsPolicy,
+        cors,
+        serverBanner,
+        xPoweredBy,
+      },
+      cookieSecurity: {
+        hasCookies,
+        cookieHttpOnly,
+        cookieSecure,
+        cookieSameSite,
+      },
+      vulnerabilitySignals: {
+        exposedEnvFile,
+        hasDomXssSinks,
+        scriptsWithoutSri,
+        hasInsecureFormAction,
+        hasPasswordInput,
+        exposedStripeKey,
+        exposedGoogleKey,
+        robotsDisclosedPaths: robotsDisclosures,
+      },
+      uxResponsive: {
+        hasViewport,
+        hasForms,
+      },
     };
   } catch (probeErr) {
     console.warn("Deep telemetry probe warning:", probeErr);
@@ -420,15 +511,15 @@ async function handleDeepPentest(chatId: number | string, rawDomain: string, use
   const prompt =
     "You are the Senior Security Architect and Lead UI/UX Engineer at Rymthos Dev (rymthos.dev), assisting founder Md. Billal Hossain.\n" +
     "Billal is NOT a developer or ethical hacker. He is the founder who needs an authoritative, deal-closing dossier for a prospective client.\n\n" +
-    "Target Telemetry: " + JSON.stringify(telemetry) + "\n\n" +
+    "Live Extracted Telemetry: " + JSON.stringify(telemetry) + "\n\n" +
     "Synthesize an Executive Client-Closing Dossier in 2 distinct sections:\n\n" +
-    "SECTION 1: DIAGNOSTIC & PRICING\n" +
-    "• 🛡️ VULNERABILITY BREAKDOWN: 2 real security flaws with CWE taxonomy (e.g. CWE-79 DOM XSS or CWE-1021 Clickjacking or CWE-693 Header gaps) and what an attacker could do.\n" +
-    "• 🎨 VISUAL UI/UX & FONT AUDIT: Specific font arrangement, mobile cutoff, touch target, or spacing flaws.\n" +
-    "• 💰 RECOMMENDED PRICING & SOW: Suggest flat-rate pricing ($149 / $499 / $899+), delivery turnaround (48h - 5 days), and deliverables.\n\n" +
+    "SECTION 1: HIGH-PRECISION DIAGNOSTIC & PRICING\n" +
+    "• 🛡️ VULNERABILITY BREAKDOWN: Correlate the exact telemetry findings (e.g. Server/X-Powered-By version leakage, missing nosniff/HSTS, session cookies lacking HttpOnly, external scripts without SRI, DOM sinks, or robots.txt disclosures) with realistic CWE taxonomy (e.g. CWE-693 Protection Mechanism Failure, CWE-1004 Cookie Without HttpOnly, CWE-79 DOM XSS, CWE-200 Information Exposure, CWE-346 Origin Validation). Explain what an attacker could realistically exploit.\n" +
+    "• 🎨 VISUAL UI/UX & FONT AUDIT: Specific font arrangement, mobile viewport, buttons, touch targets, and layout responsiveness.\n" +
+    "• 💰 RECOMMENDED PRICING & SOW: Suggest flat-rate pricing ($149 / $499 / $899+), delivery turnaround (48h - 5 days), and specific deliverables.\n\n" +
     "SECTION 2: COPY-PASTE CLIENT OUTREACH (PLAIN ENGLISH)\n" +
     "• Write a persuasive, 100% plain-English message Billal can copy and paste into WhatsApp or Email to the client.\n" +
-    "• NO jargon. Explain simply: what is broken, how it hurts their revenue/trust, and how Rymthos Dev will fix/upgrade it.\n" +
+    "• NO confusing jargon. Explain simply: what is broken, how it hurts their revenue/customer trust, and how Rymthos Dev will fix it.\n" +
     "• If Bangladeshi context applies, add a natural Banglish version.\n\n" +
     "Format clearly with bold headers and emojis. Keep total response under 450 words.";
 

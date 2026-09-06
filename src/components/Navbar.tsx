@@ -18,7 +18,15 @@ const menuExtra = [
   { label: 'Contact', href: '#contact' },
 ];
 
-export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
+export default function Navbar({
+  currency = 'USD',
+  onToggleCurrency,
+  onOpenCalc,
+}: {
+  currency?: 'USD' | 'BDT';
+  onToggleCurrency?: (c: 'USD' | 'BDT') => void;
+  onOpenCalc: () => void;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
@@ -115,6 +123,22 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
             </div>
 
             <div className="flex items-center gap-3">
+              {onToggleCurrency && (
+                <div className="hidden sm:inline-flex border-2 border-ink bg-card text-[11px] font-semibold">
+                  <button
+                    onClick={() => onToggleCurrency('USD')}
+                    className={`px-2.5 py-1.5 transition-colors ${currency === 'USD' ? 'bg-verm text-paper' : 'text-mut hover:text-ink'}`}
+                  >
+                    $ USD
+                  </button>
+                  <button
+                    onClick={() => onToggleCurrency('BDT')}
+                    className={`px-2.5 py-1.5 transition-colors ${currency === 'BDT' ? 'bg-verm text-paper' : 'text-mut hover:text-ink'}`}
+                  >
+                    ৳ BDT
+                  </button>
+                </div>
+              )}
               <button
                 onClick={() => go('#contact')}
                 className="hidden md:flex items-center gap-2 bg-ink text-paper px-5 py-2.5 text-xs font-semibold tracking-wide hover:bg-verm transition-colors group"
@@ -179,6 +203,29 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
               </div>
 
               <div className="lg:col-span-5 flex flex-col gap-5">
+                {onToggleCurrency && (
+                  <div className="border border-paper/20 p-4 bg-paper/5">
+                    <div className="t-label text-paper/60 mb-2">Display currency</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => onToggleCurrency('USD')}
+                        className={`py-2 text-xs font-semibold border transition-colors ${
+                          currency === 'USD' ? 'bg-verm text-paper border-verm' : 'border-paper/20 text-paper/70'
+                        }`}
+                      >
+                        $ US Dollar (USD)
+                      </button>
+                      <button
+                        onClick={() => onToggleCurrency('BDT')}
+                        className={`py-2 text-xs font-semibold border transition-colors ${
+                          currency === 'BDT' ? 'bg-verm text-paper border-verm' : 'border-paper/20 text-paper/70'
+                        }`}
+                      >
+                        ৳ Bangladeshi Taka (BDT)
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <motion.button
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

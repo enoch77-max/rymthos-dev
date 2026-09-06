@@ -13,7 +13,7 @@ const included = [
   'Staging link ready in 7–10 days',
 ];
 
-export default function SmallBusiness() {
+export default function SmallBusiness({ currency = 'USD' }: { currency?: 'USD' | 'BDT' }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const go = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -35,8 +35,8 @@ export default function SmallBusiness() {
             </h2>
             <p className="text-mut text-lg leading-relaxed max-w-xl mb-8">
               Most small businesses get a recycled template with the logo swapped out.
-              You get a site built around your brand, the kind that earns trust
-              before the first conversation even starts.
+              You get a site custom engineered for your brand with 1-click WhatsApp order capture,
+              fast mobile loading, and local Google Maps presence.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3 mb-10 max-w-xl">
@@ -75,10 +75,16 @@ export default function SmallBusiness() {
 
               <div className="t-label text-paper/50 mb-4">LAUNCH TICKET · LIMITED SLOTS</div>
               <div className="flex items-baseline gap-4 mb-1">
-                <span className="t-display text-7xl lg:text-8xl text-lime">$149</span>
-                <span className="t-mono text-paper/40 line-through text-xl">$399</span>
+                <span className="t-display text-7xl lg:text-8xl text-lime">
+                  {currency === 'USD' ? '$149' : '৳16,990'}
+                </span>
+                <span className="t-mono text-paper/40 line-through text-xl">
+                  {currency === 'USD' ? '$399' : '৳45,000'}
+                </span>
               </div>
-              <div className="text-xs text-paper/60 mb-2">or ৳16,990 BDT for local businesses</div>
+              <div className="text-xs text-paper/60 mb-2">
+                {currency === 'USD' ? 'or ৳16,990 BDT for local businesses' : 'or $149 USD for international founders'}
+              </div>
               <div className="t-label text-verm mb-8">SAVE 62% · THIS MONTH</div>
 
               <div className="border-t border-dashed border-paper/30 pt-6 space-y-3">
