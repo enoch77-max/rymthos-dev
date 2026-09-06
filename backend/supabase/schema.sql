@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS public.audit_reports (
   estimated_recovery   TEXT,                   -- Projected improvement (e.g. "+35% orders")
   tech_stack_detected  TEXT[],
   lead_id              UUID REFERENCES public.leads(id) ON DELETE SET NULL,
-  ip_hash              TEXT                    -- Anonymized IP hash for rate limiting
+  ip_hash              TEXT,                   -- Anonymized IP hash for rate limiting
+  visitor_token        TEXT                    -- Anonymous client-side token for browser rate limiting
 );
 
 -- Indexes for lightning queries in Supabase Table Editor
@@ -50,6 +51,8 @@ CREATE INDEX IF NOT EXISTS idx_leads_status ON public.leads (status);
 CREATE INDEX IF NOT EXISTS idx_leads_email ON public.leads (email);
 CREATE INDEX IF NOT EXISTS idx_audit_reports_created_at ON public.audit_reports (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_reports_domain ON public.audit_reports (domain);
+CREATE INDEX IF NOT EXISTS idx_audit_reports_ip_hash ON public.audit_reports (ip_hash);
+CREATE INDEX IF NOT EXISTS idx_audit_reports_visitor_token ON public.audit_reports (visitor_token);
 
 -- ============================================================
 -- 4. ROW LEVEL SECURITY (RLS) LOCKDOWN
