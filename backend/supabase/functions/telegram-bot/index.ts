@@ -305,11 +305,43 @@ async function handleStatus(chatId: number | string) {
   await sendTelegram(chatId, msg, { reply_markup: MAIN_KEYBOARD });
 }
 
+// SSRF Defense: Validate and reject non-public domains, IPs, loopbacks, and cloud metadata
+function isBlockedHost(host: string): boolean {
+  if (!host || host.length > 253) return true;
+  if (host.startsWith("[") || host.includes(":")) return true;
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+  if (/^(?:0x[0-9a-fA-F]+|\d+)$/.test(host)) return true;
+
+  const BLOCKED_HOSTS = [
+    "localhost",
+    "metadata",
+    "metadata.google.internal",
+    "instance-data",
+    "169.254.169.254",
+  ];
+  if (BLOCKED_HOSTS.some((b) => host === b || host.startsWith(b + "."))) return true;
+
+  const BLOCKED_TLDS = [".local", ".internal", ".arpa", ".corp", ".lan", ".home", ".test", ".example", ".invalid", ".onion"];
+  if (BLOCKED_TLDS.some((tld) => host.endsWith(tld))) return true;
+  if (!host.includes(".") || host.startsWith(".") || host.endsWith(".")) return true;
+
+  return false;
+}
+
 // =========================================================================
 // Deep Pentest & Executive Client-Closing Dossier Engine
 // =========================================================================
 async function handleDeepPentest(chatId: number | string, rawDomain: string) {
-  const domain = rawDomain.replace(/^https?:\/\//, "").replace(/\/+$/, "");
+  const domain = rawDomain.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
+
+  if (isBlockedHost(domain)) {
+    await sendTelegram(
+      chatId,
+      "🔒 <b>Audit Request Blocked:</b> Target is an internal network, raw IP, cloud metadata endpoint, or invalid domain."
+    );
+    return;
+  }
+
   const targetUrl = "https://" + domain;
 
   await sendTelegram(
@@ -682,20 +714,34 @@ async function callDeepSeekAI(prompt: string): Promise<string> {
 async function sendTelegram(
   chatId: number | string,
   text: string,
-  options?: { reply_markup?: unknown }
+  options?: { reply_markup?: unknown; parse_mode?: string }
 ) {
   try {
-    await fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+    const res = await fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
         text,
-        parse_mode: "HTML",
+        parse_mode: options?.parse_mode ?? "HTML",
         disable_web_page_preview: true,
         reply_markup: options?.reply_markup,
       }),
     });
+
+    if (!res.ok) {
+      // If Telegram returned 400 (entity parse error), fallback to sending as plain text
+      await fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: text.replace(/<[^>]+>/g, ""),
+          disable_web_page_preview: true,
+          reply_markup: options?.reply_markup,
+        }),
+      });
+    }
   } catch (e) {
     console.error("sendTelegram Error:", e);
   }

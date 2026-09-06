@@ -4,28 +4,28 @@ import { Check, ArrowRight, KeyRound, CircleDot, PlusCircle, Hourglass } from 'l
 
 const plans = [
   {
-    name: 'Essential', price: '$29', period: '/mo', tag: 'KEEP IT RUNNING',
-    desc: 'The basics every site needs, handled so you never think about them.',
+    name: 'Shield', price: '$19', bdt: '৳1,990', period: '/mo', tag: 'SHIELD & HOSTING',
+    desc: 'Managed cloud hosting, daily backups, and security patches so you never worry about servers.',
     features: [
-      'Uptime & security monitoring',
-      'Weekly automated backups',
+      'Managed cloud hosting included',
+      'Daily automated offsite backups',
       'SSL renewals & security patches',
-      'Domain & hosting management',
-      'Small content updates (text / images)',
-      'Priority email support',
+      'Domain & DNS management',
+      'Small text & photo updates',
+      'Priority email & ticket support',
     ],
     tone: 'light' as const,
   },
   {
-    name: 'Growth', price: '$79', period: '/mo', tag: 'KEEP IT HEALTHY',
-    desc: 'Everything in Essential, plus fixes and tuning for what we built.',
+    name: 'Growth', price: '$59', bdt: '৳5,990', period: '/mo', tag: 'ACTIVE STORE & GROWTH',
+    desc: 'Everything in Shield, plus bug fixes, speed tuning, and 2 hours of monthly custom edits.',
     features: [
-      'Everything in Essential',
+      'Everything in Shield & Hosting',
       'Bug fixes for everything we built',
-      'Monthly performance tune-up',
-      '2 hrs/mo of small changes',
-      'Health & analytics report',
-      'Priority WhatsApp support',
+      'Monthly speed & SEO tune-up',
+      '2 hrs/mo of custom improvements',
+      'Traffic & conversion insights',
+      'Priority WhatsApp direct support',
     ],
     tone: 'dark' as const,
   },
@@ -149,6 +149,7 @@ export default function Care({ onEstimate, onContact }: { onEstimate: () => void
                 <h3 className="t-display text-3xl">{p.name}</h3>
                 <span className={`t-display text-2xl ${p.tone === 'light' ? 'text-verm' : 'text-lime'}`}>{p.price}</span>
                 <span className={`text-sm ${p.tone === 'light' ? 'text-mut' : 'text-paper/60'}`}>{p.period}</span>
+                {'bdt' in p && <span className="text-xs opacity-50 ml-1">({p.bdt})</span>}
               </div>
               <p className={`text-sm mb-6 ${p.tone === 'light' ? 'text-mut' : 'text-paper/70'}`}>{p.desc}</p>
               <ul className="space-y-2.5 mb-7 flex-1">

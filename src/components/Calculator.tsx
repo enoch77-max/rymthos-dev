@@ -7,33 +7,74 @@ import {
 
 type TypeKey = 'website' | 'ecommerce' | 'mobile' | 'webapp';
 
-const TYPES: Record<TypeKey, { label: string; icon: typeof Globe; blurb: string; plans: [string, number][] }> = {
-  website: { label: 'Website', icon: Globe, blurb: 'Brand, portfolio, marketing', plans: [['Starter', 149], ['Business', 349]] },
-  ecommerce: { label: 'E-Commerce', icon: ShoppingCart, blurb: 'Online store that sells', plans: [['Standard', 299], ['Advanced', 499]] },
-  mobile: { label: 'Mobile App', icon: Smartphone, blurb: 'iOS & Android', plans: [['MVP', 299], ['Full', 799]] },
-  webapp: { label: 'Web App', icon: Code2, blurb: 'Dashboard / SaaS / tool', plans: [['Lean', 799], ['Scale', 1499]] },
+interface PlanPricing {
+  name: string;
+  usd: number;
+  bdt: number;
+}
+
+const TYPES: Record<TypeKey, { label: string; icon: typeof Globe; blurb: string; plans: PlanPricing[] }> = {
+  website: {
+    label: 'Website',
+    icon: Globe,
+    blurb: 'Brand, portfolio, marketing',
+    plans: [
+      { name: 'Starter', usd: 179, bdt: 19990 },
+      { name: 'Business', usd: 349, bdt: 39990 },
+    ],
+  },
+  ecommerce: {
+    label: 'E-Commerce',
+    icon: ShoppingCart,
+    blurb: 'Online store with payments & dispatch',
+    plans: [
+      { name: 'Standard Store', usd: 449, bdt: 49990 },
+      { name: 'Advanced Commerce', usd: 649, bdt: 74990 },
+    ],
+  },
+  mobile: {
+    label: 'Mobile App',
+    icon: Smartphone,
+    blurb: 'Android, iOS, or Dual-Platform',
+    plans: [
+      { name: 'Android Only', usd: 349, bdt: 39990 },
+      { name: 'iOS Only', usd: 499, bdt: 54990 },
+      { name: 'Dual (iOS + Android)', usd: 799, bdt: 89990 },
+    ],
+  },
+  webapp: {
+    label: 'Web App',
+    icon: Code2,
+    blurb: 'Dashboard / SaaS / internal tool',
+    plans: [
+      { name: 'Lean MVP', usd: 899, bdt: 99990 },
+      { name: 'Scale Platform', usd: 1599, bdt: 179990 },
+    ],
+  },
 };
 
-const ADDONS: [string, number][] = [
-  ['Auto image compression', 79],
-  ['WhatsApp order alerts', 69],
-  ['Abandoned cart recovery', 99],
-  ['Multi-language', 129],
-  ['Live chat', 49],
-  ['Booking system', 149],
-  ['Extra payment gateway', 79],
-  ['AI site assistant', 149],
-  ['AI product descriptions', 99],
-  ['Branding & logo', 99],
+const ADDONS: { name: string; usd: number; bdt: number }[] = [
+  { name: 'Auto image compression', usd: 49, bdt: 5000 },
+  { name: 'WhatsApp order alerts', usd: 69, bdt: 7500 },
+  { name: 'Courier API (Pathao / Steadfast)', usd: 69, bdt: 7500 },
+  { name: 'Abandoned cart recovery', usd: 99, bdt: 11000 },
+  { name: 'Multi-language (Bangla + English)', usd: 99, bdt: 11000 },
+  { name: 'Live chat widget', usd: 49, bdt: 5000 },
+  { name: 'Booking & appointment system', usd: 129, bdt: 14000 },
+  { name: 'Extra payment gateway (bKash/Stripe)', usd: 79, bdt: 8500 },
+  { name: 'AI site chatbot assistant', usd: 149, bdt: 16000 },
+  { name: 'AI product description writer', usd: 99, bdt: 11000 },
+  { name: 'Branding & logo kit', usd: 99, bdt: 11000 },
 ];
 
-const CARE: [string, number, string][] = [
-  ['None', 0, 'I\u2019ll manage it myself'],
-  ['Essential', 29, 'Hosting, backups, updates'],
-  ['Growth', 79, '+ bug fixes & improvements'],
+const CARE: { name: string; usd: number; bdt: number; desc: string }[] = [
+  { name: 'None', usd: 0, bdt: 0, desc: 'I will manage hosting & updates myself' },
+  { name: 'Shield', usd: 19, bdt: 1990, desc: 'Cloud hosting, daily backups, SSL renewals' },
+  { name: 'Growth', usd: 59, bdt: 5990, desc: '+ bug fixes, speed tuning & 2h edits/mo' },
 ];
 
 export default function Calculator({ onClose, onContact }: { onClose: () => void; onContact: () => void }) {
+  const [currency, setCurrency] = useState<'USD' | 'BDT'>('USD');
   const [type, setType] = useState<TypeKey>('website');
   const [planIdx, setPlanIdx] = useState(0);
   const [addons, setAddons] = useState<number[]>([]);
@@ -45,12 +86,25 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
   const toggleAddon = (i: number) =>
     setAddons((a) => (a.includes(i) ? a.filter((x) => x !== i) : [...a, i]));
 
+  const sym = currency === 'USD' ? '$' : '৳';
+  const getPrice = (usd: number, bdt: number) => (currency === 'USD' ? usd : bdt);
+
   const { build, monthly, yearly } = useMemo(() => {
-    const b = TYPES[type].plans[planIdx][1] + addons.reduce((s, i) => s + ADDONS[i][1], 0);
-    const m = hosting + (email ? 6 : 0) + CARE[care][1];
-    const y = (hosting + (email ? 6 : 0)) * 12 + CARE[care][1] * 10 + 15;
+    const selectedPlan = TYPES[type].plans[planIdx] || TYPES[type].plans[0];
+    const planCost = getPrice(selectedPlan.usd, selectedPlan.bdt);
+    const addonsCost = addons.reduce((s, i) => s + getPrice(ADDONS[i].usd, ADDONS[i].bdt), 0);
+    const b = planCost + addonsCost;
+
+    const hostCost = currency === 'USD' ? hosting : hosting * 115;
+    const emailCost = email ? (currency === 'USD' ? 6 : 700) : 0;
+    const careCost = getPrice(CARE[care].usd, CARE[care].bdt);
+
+    const m = hostCost + emailCost + careCost;
+    const domainCost = currency === 'USD' ? 15 : 1800;
+    const y = (hostCost + emailCost) * 12 + careCost * 10 + domainCost;
+
     return { build: b, monthly: m, yearly: y };
-  }, [type, planIdx, addons, care, hosting, email]);
+  }, [type, planIdx, addons, care, hosting, email, currency]);
 
   const running = billing === 'mo' ? monthly : yearly;
 
@@ -64,8 +118,19 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
             Back to site
           </button>
           <div className="flex items-center gap-3">
-            <span className="t-display text-lg">COST CALCULATOR</span>
-            <span className="t-label bg-ink text-paper px-2 py-1 hidden sm:block">Estimates only</span>
+            <div className="inline-flex border-2 border-ink bg-card">
+              {(['USD', 'BDT'] as const).map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setCurrency(c)}
+                  className={`t-label px-3 py-1 transition-colors ${currency === c ? 'bg-verm text-paper' : 'text-mut hover:text-ink'}`}
+                >
+                  {c === 'USD' ? '$ USD' : '৳ BDT'}
+                </button>
+              ))}
+            </div>
+            <span className="t-display text-lg hidden sm:block">COST CALCULATOR</span>
+            <span className="t-label bg-ink text-paper px-2 py-1 hidden md:block">Estimates only</span>
           </div>
         </div>
       </div>
@@ -100,18 +165,18 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
           {/* 2 plan */}
           <div>
             <Step n="02" t="Which tier?" />
-            <div className="grid grid-cols-2 gap-3">
-              {TYPES[type].plans.map(([name, price], i) => (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {TYPES[type].plans.map((p, i) => (
                 <button
-                  key={name}
+                  key={p.name}
                   onClick={() => setPlanIdx(i)}
-                  className={`p-5 border-2 text-left transition-all ${
+                  className={`p-4 border-2 text-left transition-all ${
                     planIdx === i ? 'border-ink bg-lime hard-shadow-sm' : 'border-ink bg-card hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className="flex items-baseline justify-between">
-                    <span className="font-semibold">{name}</span>
-                    <span className="t-display text-2xl">${price}</span>
+                  <div className="font-semibold text-sm mb-1">{p.name}</div>
+                  <div className="t-display text-xl">
+                    {sym}{getPrice(p.usd, p.bdt).toLocaleString()}
                   </div>
                 </button>
               ))}
@@ -120,13 +185,13 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
 
           {/* 3 addons */}
           <div>
-            <Step n="03" t="Anything extra?" hint="optional" />
+            <Step n="03" t="Anything extra?" hint="optional power-packs" />
             <div className="grid sm:grid-cols-2 gap-2">
-              {ADDONS.map(([name, price], i) => {
+              {ADDONS.map((a, i) => {
                 const on = addons.includes(i);
                 return (
                   <button
-                    key={name}
+                    key={a.name}
                     onClick={() => toggleAddon(i)}
                     className={`group flex items-center gap-3 px-4 py-3 border-2 text-left transition-all ${
                       on ? 'border-ink bg-ink text-paper' : 'border-line-2 bg-card hover:border-ink hover:-translate-y-px'
@@ -137,9 +202,9 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
                     }`}>
                       {on && <Check className="w-3 h-3 text-paper" strokeWidth={3} />}
                     </span>
-                    <span className="flex-1 text-[13px] font-medium leading-snug">{name}</span>
+                    <span className="flex-1 text-[13px] font-medium leading-snug">{a.name}</span>
                     <span className={`t-mono text-[11px] shrink-0 tabular ${on ? 'text-lime' : 'text-mut-2'}`}>
-                      +${price}
+                      +{sym}{getPrice(a.usd, a.bdt).toLocaleString()}
                     </span>
                   </button>
                 );
@@ -151,9 +216,9 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
           <div>
             <Step n="04" t="After-launch care" />
             <div className="grid sm:grid-cols-3 gap-3">
-              {CARE.map(([name, price, d], i) => (
+              {CARE.map((c, i) => (
                 <button
-                  key={name}
+                  key={c.name}
                   onClick={() => setCare(i)}
                   className={`p-4 border-2 text-left transition-all ${
                     care === i ? 'border-ink bg-ink text-paper hard-shadow-sm' : 'border-ink bg-card hover:-translate-y-0.5'
@@ -161,9 +226,11 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
                 >
                   <Wrench className={`w-4 h-4 mb-2 ${care === i ? 'text-lime' : 'text-verm'}`} />
                   <div className="font-semibold text-sm flex items-baseline gap-1.5">
-                    {name} {price > 0 && <span className="t-mono text-xs text-verm">${price}/mo</span>}
+                    {c.name} {c.usd > 0 && <span className="t-mono text-xs text-verm">
+                      {sym}{getPrice(c.usd, c.bdt).toLocaleString()}/mo
+                    </span>}
                   </div>
-                  <div className={`text-[11px] mt-1 ${care === i ? 'text-paper/60' : 'text-mut'}`}>{d}</div>
+                  <div className={`text-[11px] mt-1 ${care === i ? 'text-paper/60' : 'text-mut'}`}>{c.desc}</div>
                 </button>
               ))}
             </div>
@@ -171,12 +238,12 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
 
           {/* 5 running */}
           <div>
-            <Step n="05" t="Running costs" hint="goes to providers at cost" />
+            <Step n="05" t="Running costs" hint="infrastructure at provider cost" />
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { v: 5, l: 'Basic hosting', d: '~$5/mo for blogs and sites' },
-                  { v: 25, l: 'Pro hosting', d: '~$25/mo for stores and apps' },
+                  { v: 5, l: 'Managed basic cloud', d: currency === 'USD' ? '~$5/mo for sites' : '~৳550/mo' },
+                  { v: 25, l: 'Pro scalable cloud', d: currency === 'USD' ? '~$25/mo for stores & apps' : '~৳2,800/mo' },
                 ].map((h) => (
                   <button
                     key={h.v}
@@ -201,7 +268,9 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
                   <Mail className={`w-4 h-4 ${email ? 'text-lime' : 'text-verm'}`} />
                   Business email (you@yourbrand.com)
                 </span>
-                <span className="t-mono text-xs">+~$6/seat/mo</span>
+                <span className="t-mono text-xs">
+                  {currency === 'USD' ? '+~$6/seat/mo' : '+~৳700/seat/mo'}
+                </span>
               </button>
             </div>
           </div>
@@ -210,7 +279,7 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
         {/* summary */}
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-24 bg-ink text-paper border-2 border-ink hard-shadow-verm p-8">
-            <div className="t-label text-paper/50 mb-6">YOUR ESTIMATE</div>
+            <div className="t-label text-paper/50 mb-6">YOUR ESTIMATE ({currency})</div>
 
             <div className="flex items-end justify-between mb-1">
               <span className="text-sm text-paper/60">One-time build</span>
@@ -221,14 +290,14 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25 }}
-                  className="t-display text-5xl text-lime"
+                  className="t-display text-4xl lg:text-5xl text-lime"
                 >
-                  ${build}
+                  {sym}{build.toLocaleString()}
                 </motion.span>
               </AnimatePresence>
             </div>
             <div className="text-[11px] text-paper/40 mb-6">
-              {TYPES[type].plans[planIdx][0]} {TYPES[type].label}
+              {TYPES[type].plans[planIdx]?.name} {TYPES[type].label}
               {addons.length > 0 && ` + ${addons.length} add-on${addons.length > 1 ? 's' : ''}`}
             </div>
 
@@ -254,14 +323,14 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25 }}
-                  className="t-display text-4xl text-paper block text-right"
+                  className="t-display text-3xl lg:text-4xl text-paper block text-right"
                 >
-                  ${running}<span className="text-base text-paper/50">/{billing}</span>
+                  {sym}{Math.round(running).toLocaleString()}<span className="text-base text-paper/50">/{billing}</span>
                 </motion.span>
               </AnimatePresence>
               <div className="text-[11px] text-paper/40 mt-2 space-y-1">
-                <div>Hosting ${hosting}/mo · Email {email ? '$6/mo' : 'off'} · Care ${CARE[care][1]}/mo{care > 0 && ' (2 months free yearly)'}</div>
-                {billing === 'yr' && <div>Includes ~$15/yr domain</div>}
+                <div>Hosting + Care {CARE[care].usd > 0 && '(includes 2 months free on yearly)'}</div>
+                {billing === 'yr' && <div>Includes domain registration at cost</div>}
               </div>
             </div>
 
@@ -275,7 +344,7 @@ export default function Calculator({ onClose, onContact }: { onClose: () => void
 
             <div className="flex gap-2 mt-5 text-[11px] text-paper/40 leading-relaxed">
               <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              Estimates only. Your final quote is fixed after a free 30-minute call. No hidden fees, ever.
+              Estimates only. Your final quote is fixed in writing before we build. Zero surprise fees, ever.
             </div>
           </div>
         </div>

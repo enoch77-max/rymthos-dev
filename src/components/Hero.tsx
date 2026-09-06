@@ -7,10 +7,10 @@ const WORDS = ['websites', 'mobile apps', 'e-commerce', 'AI products', 'brands']
 
 // the promises we rotate through the dossier, in our own words
 const TICKS = [
+  '7-day speed lock guarantee',
   'Fixed quote before we start',
-  'Replies within 24 hours',
-  '30-day free fixes',
-  'You own every line',
+  '30-day free defect fixes',
+  'You own 100% of the code',
 ];
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -171,7 +171,7 @@ export default function Hero() {
               {[
                 { v: <Counter to={15} suffix="+" />, l: 'Projects built' },
                 { v: <Counter to={30} suffix="+" />, l: 'Technologies' },
-                { v: <span>3–5<span className="text-verm">d</span></span>, l: 'Avg. delivery' },
+                { v: <span>7–10<span className="text-verm">d</span></span>, l: 'Sprint staging' },
               ].map((s, i) => (
                 <div key={i} className="border-l-2 border-ink pl-4">
                   <div className="t-display text-4xl text-ink">{s.v}</div>

@@ -4,13 +4,13 @@ import { ArrowRight, Check } from 'lucide-react';
 
 const included = [
   '100% custom design, never a template',
-  'Up to 5 pages, mobile-first',
+  'Up to 5 pages, mobile-first & responsive',
   'Working contact form + Google map',
-  'On-page SEO + Google Business',
+  'On-page SEO + Google Business setup',
   'SSL + security hardening',
-  'Social links & WhatsApp button',
-  '2 revision rounds',
-  'Delivered in 3–5 days',
+  'Social links & 1-tap WhatsApp button',
+  '2 revision rounds included',
+  'Staging link ready in 7–10 days',
 ];
 
 export default function SmallBusiness() {
@@ -74,19 +74,20 @@ export default function SmallBusiness() {
               <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-6 rounded-full bg-paper border-2 border-ink" />
 
               <div className="t-label text-paper/50 mb-4">LAUNCH TICKET · LIMITED SLOTS</div>
-              <div className="flex items-baseline gap-4 mb-2">
-                <span className="t-display text-8xl text-lime">$149</span>
+              <div className="flex items-baseline gap-4 mb-1">
+                <span className="t-display text-7xl lg:text-8xl text-lime">$149</span>
                 <span className="t-mono text-paper/40 line-through text-xl">$399</span>
               </div>
+              <div className="text-xs text-paper/60 mb-2">or ৳16,990 BDT for local businesses</div>
               <div className="t-label text-verm mb-8">SAVE 62% · THIS MONTH</div>
 
               <div className="border-t border-dashed border-paper/30 pt-6 space-y-3">
                 {[
-                  ['Payment', '50% now · 50% at launch'],
-                  ['Turnaround', '3–5 business days'],
-                  ['Revisions', '2 rounds included'],
+                  ['Payment', '50% deposit · 50% at launch'],
+                  ['Turnaround', '7–10 business days'],
+                  ['Speed lock', '7-day staging guarantee'],
                   ['Ownership', 'You own 100%, forever'],
-                  ['Support', '30 days free after launch'],
+                  ['Support', '30 days free fixes after launch'],
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between text-sm">
                     <span className="text-paper/50">{k}</span>
