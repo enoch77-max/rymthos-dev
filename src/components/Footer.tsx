@@ -1,5 +1,6 @@
 import BrandIcon from './BrandIcon';
 import { heroChips } from '../data/tech';
+import { SA_PHONE_NUMBER, SA_PHONE_RAW, BD_PHONE_DISPLAY, WA_NUMBER, EMAIL } from '../lib/lead';
 
 type LegalDoc = 'terms' | 'privacy';
 
@@ -54,8 +55,9 @@ export default function Footer({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) => 
             </ul>
             <div className="t-label text-paper/40 mb-4 mt-8">Direct</div>
             <ul className="space-y-2 text-sm text-paper/60">
-              <li><a href="mailto:rymthos.dev@gmail.com" className="hover:text-verm transition-colors break-all">rymthos.dev@gmail.com</a></li>
-              <li><a href="https://wa.me/8801400788738" className="hover:text-verm transition-colors">WhatsApp: +880 1400 788 738</a></li>
+              <li><a href={`mailto:${EMAIL}`} className="hover:text-verm transition-colors break-all">{EMAIL}</a></li>
+              <li><a href={`tel:+${SA_PHONE_RAW}`} className="hover:text-verm transition-colors">Direct Call: {SA_PHONE_NUMBER}</a></li>
+              <li><a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors">WhatsApp: {BD_PHONE_DISPLAY}</a></li>
               <li><a href="https://100toolcrate.com" target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors">100toolcrate.com</a></li>
             </ul>
           </div>

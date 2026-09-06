@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowUpRight, ArrowUp, Calculator, Mail, Phone } from 'lucide-react';
+import { Menu, X, ArrowUpRight, ArrowUp, Calculator, Mail, Phone, MessageCircle } from 'lucide-react';
+import { SA_PHONE_NUMBER, SA_PHONE_RAW, BD_PHONE_DISPLAY, WA_NUMBER, EMAIL } from '../lib/lead';
 
 const links = [
   { label: 'Services', href: '#services' },
@@ -193,11 +194,20 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
                   className="border border-paper/15 p-6 space-y-3"
                 >
                   <div className="t-label text-paper/40 mb-2">Direct</div>
-                  <a href="mailto:rymthos.dev@gmail.com" className="flex items-center gap-3 text-sm text-paper/80 hover:text-verm transition-colors">
-                    <Mail className="w-4 h-4" /> rymthos.dev@gmail.com
+                  <a href={`mailto:${EMAIL}`} className="flex items-center gap-3 text-sm text-paper/80 hover:text-verm transition-colors">
+                    <Mail className="w-4 h-4" /> {EMAIL}
                   </a>
-                  <a href="https://wa.me/8801400788738" className="flex items-center gap-3 text-sm text-paper/80 hover:text-verm transition-colors">
-                    <Phone className="w-4 h-4" /> +880 1400 788 738
+                  <a href={`tel:+${SA_PHONE_RAW}`} className="flex items-center justify-between text-sm text-paper/80 hover:text-verm transition-colors">
+                    <span className="flex items-center gap-3">
+                      <Phone className="w-4 h-4 text-lime" /> {SA_PHONE_NUMBER}
+                    </span>
+                    <span className="text-[10px] text-lime border border-lime/30 px-1.5 py-0.5 font-mono">Direct Call</span>
+                  </a>
+                  <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between text-sm text-paper/80 hover:text-verm transition-colors">
+                    <span className="flex items-center gap-3">
+                      <MessageCircle className="w-4 h-4 text-paper/70" /> {BD_PHONE_DISPLAY}
+                    </span>
+                    <span className="text-[10px] text-paper/40 border border-paper/20 px-1.5 py-0.5 font-mono">WhatsApp</span>
                   </a>
                 </motion.div>
               </div>

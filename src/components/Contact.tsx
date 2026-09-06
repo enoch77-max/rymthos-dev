@@ -4,13 +4,48 @@ import { Mail, Phone, MessageCircle, Globe, Send, CheckCircle2, ArrowUpRight, Ch
 
 type LegalDoc = 'terms' | 'privacy';
 
-import { WEB3FORMS_KEY, WA_NUMBER, EMAIL, API_ENDPOINT } from '../lib/lead';
+import {
+  WEB3FORMS_KEY,
+  WA_NUMBER,
+  EMAIL,
+  API_ENDPOINT,
+  SA_PHONE_NUMBER,
+  SA_PHONE_RAW,
+  BD_PHONE_DISPLAY,
+  ALT_WA_NUMBER,
+} from '../lib/lead';
 
 const methods = [
-  { icon: MessageCircle, label: 'Direct WhatsApp · Global', value: '+880 1400 788 738', href: 'https://wa.me/8801400788738' },
-  { icon: Phone, label: 'Direct Call / WhatsApp · Bangladesh', value: '+880 1400 788 738', href: 'tel:+8801400788738' },
-  { icon: Mail, label: 'Direct Email', value: 'rymthos.dev@gmail.com', href: 'mailto:rymthos.dev@gmail.com' },
-  { icon: Globe, label: 'Official Facebook', value: 'Rymthos Dev', href: 'https://www.facebook.com/share/1KpGGzTiwS/' },
+  {
+    icon: Phone,
+    label: 'Direct Phone Call · Active Line',
+    value: SA_PHONE_NUMBER,
+    href: `tel:+${SA_PHONE_RAW}`,
+  },
+  {
+    icon: MessageCircle,
+    label: 'Direct WhatsApp · Primary Chat',
+    value: BD_PHONE_DISPLAY,
+    href: `https://wa.me/${WA_NUMBER}`,
+  },
+  {
+    icon: MessageCircle,
+    label: 'Alternative WhatsApp',
+    value: SA_PHONE_NUMBER,
+    href: `https://wa.me/${ALT_WA_NUMBER}`,
+  },
+  {
+    icon: Mail,
+    label: 'Direct Email',
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
+  },
+  {
+    icon: Globe,
+    label: 'Official Facebook',
+    value: 'Rymthos Dev',
+    href: 'https://www.facebook.com/share/1KpGGzTiwS/',
+  },
 ];
 
 export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) => void }) {
@@ -325,24 +360,27 @@ export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) =>
               </div>
             </div>
 
-            {methods.map((m, i) => (
-              <a
-                key={i}
-                href={m.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-5 bg-card border-2 border-ink p-5 hover:bg-ink hover:text-paper transition-colors hard-shadow-sm"
-              >
-                <span className="w-11 h-11 bg-paper-2 border-2 border-ink flex items-center justify-center group-hover:bg-verm group-hover:border-verm transition-colors">
-                  <m.icon className="w-4 h-4" />
-                </span>
-                <div className="flex-1">
-                  <div className="t-label text-mut group-hover:text-paper/50">{m.label}</div>
-                  <div className="font-semibold">{m.value}</div>
-                </div>
-                <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </a>
-            ))}
+            {methods.map((m, i) => {
+              const isExternal = m.href.startsWith('http');
+              return (
+                <a
+                  key={i}
+                  href={m.href}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  className="group flex items-center gap-5 bg-card border-2 border-ink p-5 hover:bg-ink hover:text-paper transition-colors hard-shadow-sm"
+                >
+                  <span className="w-11 h-11 bg-paper-2 border-2 border-ink flex items-center justify-center group-hover:bg-verm group-hover:border-verm transition-colors">
+                    <m.icon className="w-4 h-4" />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="t-label text-mut group-hover:text-paper/50">{m.label}</div>
+                    <div className="font-semibold truncate">{m.value}</div>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                </a>
+              );
+            })}
 
             <div className="bg-ink text-paper border-2 border-ink p-6">
               <div className="t-label text-paper/50 mb-3">What happens next</div>

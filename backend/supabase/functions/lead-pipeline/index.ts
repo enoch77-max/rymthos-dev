@@ -321,7 +321,8 @@ function getBrandedEmailHtml(first: string, reply: string, projectType: string):
         <td style="padding:20px 28px;color:#888;font-size:12px;line-height:1.6;">
           Md. Billal Hossain &mdash; Founder & Principal Engineer, Rymthos Dev<br/>
           <a href="mailto:rymthos.dev@gmail.com" style="color:#ff4d1c;text-decoration:none;font-weight:bold;">rymthos.dev@gmail.com</a> &middot; 
-          <a href="https://wa.me/8801400788738" style="color:#ff4d1c;text-decoration:none;font-weight:bold;">Direct WhatsApp</a>
+          <a href="tel:+966571876846" style="color:#ff4d1c;text-decoration:none;font-weight:bold;">Direct Call (+966 57 187 6846)</a> &middot; 
+          <a href="https://wa.me/8801400788738" style="color:#ff4d1c;text-decoration:none;font-weight:bold;">WhatsApp</a>
         </td>
       </tr>
     </table>
