@@ -15,7 +15,7 @@ const included = [
 
 export default function SmallBusiness() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const go = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
 
   return (

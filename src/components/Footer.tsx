@@ -49,16 +49,17 @@ export default function Footer({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) => 
           </div>
           <div>
             <div className="t-label text-paper/40 mb-4">Legal</div>
-            <ul className="space-y-2 text-sm text-paper/60">
-              <li><button onClick={() => onOpenLegal('terms')} className="hover:text-verm transition-colors">Terms &amp; Conditions</button></li>
-              <li><button onClick={() => onOpenLegal('privacy')} className="hover:text-verm transition-colors">Privacy Policy</button></li>
+            <ul className="space-y-1.5 text-sm text-paper/60">
+              <li><button onClick={() => onOpenLegal('terms')} className="hover:text-verm transition-colors py-1 inline-block text-left">Terms &amp; Conditions</button></li>
+              <li><button onClick={() => onOpenLegal('privacy')} className="hover:text-verm transition-colors py-1 inline-block text-left">Privacy Policy</button></li>
             </ul>
             <div className="t-label text-paper/40 mb-4 mt-8">Direct</div>
             <ul className="space-y-2 text-sm text-paper/60">
-              <li><a href={`mailto:${EMAIL}`} className="hover:text-verm transition-colors break-all">{EMAIL}</a></li>
-              <li><a href={`tel:+${SA_PHONE_RAW}`} className="hover:text-verm transition-colors">Direct Call: {SA_PHONE_NUMBER}</a></li>
-              <li><a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors">WhatsApp: {BD_PHONE_DISPLAY}</a></li>
-              <li><a href="https://100toolcrate.com" target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors">100toolcrate.com</a></li>
+              <li><a href={`mailto:${EMAIL}`} className="hover:text-verm transition-colors break-all py-0.5 block">{EMAIL}</a></li>
+              <li><a href={`tel:+${SA_PHONE_RAW}`} className="hover:text-verm transition-colors py-0.5 block">Direct Call (KSA): {SA_PHONE_NUMBER}</a></li>
+              <li><a href={`https://wa.me/${SA_PHONE_RAW}`} target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors py-0.5 block">WhatsApp (KSA): {SA_PHONE_NUMBER}</a></li>
+              <li><a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors py-0.5 block">WhatsApp (BD): {BD_PHONE_DISPLAY}</a></li>
+              <li><a href="https://100toolcrate.com" target="_blank" rel="noopener noreferrer" className="hover:text-verm transition-colors py-0.5 block">100toolcrate.com</a></li>
             </ul>
           </div>
         </div>

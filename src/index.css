@@ -43,6 +43,13 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
   .animate-marquee,
   .animate-marquee-slow,
   .animate-floaty,
@@ -51,6 +58,18 @@ body {
     animation: none !important;
   }
   html { scroll-behavior: auto; }
+}
+
+@media print {
+  *, ::before, ::after {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
 }
 
 ::-webkit-scrollbar { width: 8px; }

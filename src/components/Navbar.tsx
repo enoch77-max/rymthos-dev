@@ -27,19 +27,26 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
   const [quarter, setQuarter] = useState('');
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-      setShowTop(window.scrollY > 700);
-      const ids = [...links.map((l) => l.href.slice(1)), 'contact'];
-      for (let i = ids.length - 1; i >= 0; i--) {
-        const el = document.getElementById(ids[i]);
-        if (el && el.getBoundingClientRect().top <= 160) {
-          setActive(ids[i]);
-          break;
-        }
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 24);
+          setShowTop(window.scrollY > 700);
+          const ids = [...links.map((l) => l.href.slice(1)), 'contact'];
+          for (let i = ids.length - 1; i >= 0; i--) {
+            const el = document.getElementById(ids[i]);
+            if (el && el.getBoundingClientRect().top <= 160) {
+              setActive(ids[i]);
+              break;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     const tick = () => {
       const d = new Date();
       setTime(d.toLocaleTimeString('en-US', {
@@ -118,7 +125,7 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
               <button
                 onClick={() => setOpen(true)}
                 aria-label="Open menu"
-                className="w-10 h-10 border-2 border-ink flex items-center justify-center hover:bg-ink hover:text-paper transition-colors"
+                className="w-11 h-11 border-2 border-ink flex items-center justify-center hover:bg-ink hover:text-paper transition-colors"
               >
                 <Menu className="w-4 h-4" />
               </button>
@@ -142,7 +149,7 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="w-10 h-10 border-2 border-paper/30 flex items-center justify-center hover:bg-verm hover:border-verm transition-colors"
+                className="w-11 h-11 border-2 border-paper/30 flex items-center justify-center hover:bg-verm hover:border-verm transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -201,13 +208,19 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
                     <span className="flex items-center gap-3">
                       <Phone className="w-4 h-4 text-lime" /> {SA_PHONE_NUMBER}
                     </span>
-                    <span className="text-[10px] text-lime border border-lime/30 px-1.5 py-0.5 font-mono">Direct Call</span>
+                    <span className="text-[10px] text-lime border border-lime/30 px-1.5 py-0.5 font-mono">Direct Call (KSA)</span>
+                  </a>
+                  <a href={`https://wa.me/${SA_PHONE_RAW}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between text-sm text-paper/80 hover:text-verm transition-colors">
+                    <span className="flex items-center gap-3">
+                      <MessageCircle className="w-4 h-4 text-emerald-400" /> {SA_PHONE_NUMBER}
+                    </span>
+                    <span className="text-[10px] text-emerald-400 border border-emerald-400/30 px-1.5 py-0.5 font-mono">WhatsApp (KSA)</span>
                   </a>
                   <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between text-sm text-paper/80 hover:text-verm transition-colors">
                     <span className="flex items-center gap-3">
                       <MessageCircle className="w-4 h-4 text-paper/70" /> {BD_PHONE_DISPLAY}
                     </span>
-                    <span className="text-[10px] text-paper/40 border border-paper/20 px-1.5 py-0.5 font-mono">WhatsApp</span>
+                    <span className="text-[10px] text-paper/40 border border-paper/20 px-1.5 py-0.5 font-mono">WhatsApp (BD)</span>
                   </a>
                 </motion.div>
               </div>
@@ -238,11 +251,18 @@ export default function Navbar({ onOpenCalc }: { onOpenCalc: () => void }) {
 function ScrollProgress() {
   const [p, setP] = useState(0);
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      const h = document.documentElement;
-      setP(h.scrollTop / (h.scrollHeight - h.clientHeight));
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const h = document.documentElement;
+          setP(h.scrollTop / (h.scrollHeight - h.clientHeight));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   return (

@@ -62,7 +62,7 @@ const outside = [
 
 export default function Care({ onEstimate, onContact }: { onEstimate: () => void; onContact: () => void }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
 
   return (
     <section id="care" ref={ref} className="relative py-28 lg:py-36">

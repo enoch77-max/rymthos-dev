@@ -200,7 +200,7 @@ function AfterStore() {
 /* ---- helpers ---- */
 function Count({ to, decimals = 0, suffix = '' }: { to: number; decimals?: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '60px 0px' });
+  const inView = useInView(ref, { once: true, margin: '300px 0px' });
   const reduced = useReducedMotion();
   const [v, setV] = useState(0);
   useEffect(() => {
@@ -227,7 +227,7 @@ function Count({ to, decimals = 0, suffix = '' }: { to: number; decimals?: numbe
 export default function WhyUs() {
   const ref = useRef(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const reduced = useReducedMotion();
   const [pos, setPos] = useState(50);
   const [dragging, setDragging] = useState(false);

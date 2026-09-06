@@ -72,7 +72,7 @@ const slides = [
 
 export default function DemoShowcase() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragX, setDragX] = useState(0);

@@ -15,7 +15,7 @@ const go = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior
 
 export default function Outcomes() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
 
   return (
     <section id="outcomes" ref={ref} className="relative py-28 lg:py-36">

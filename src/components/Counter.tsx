@@ -11,7 +11,7 @@ interface Props {
 
 export default function Counter({ to, suffix = '', prefix = '', duration = 1.6, className = '' }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '60px 0px' });
+  const inView = useInView(ref, { once: true, margin: '300px 0px' });
   const [val, setVal] = useState(0);
 
   useEffect(() => {

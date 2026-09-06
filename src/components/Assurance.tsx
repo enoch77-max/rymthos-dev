@@ -76,7 +76,7 @@ const trust = [
 
 export default function Assurance() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [open, setOpen] = useState<number | null>(0);
 
   return (

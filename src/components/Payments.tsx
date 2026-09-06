@@ -26,7 +26,7 @@ function LogoRow({ logos, reverse = false }: { logos: PaymentLogo[]; reverse?: b
 
 export default function Payments() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
 
   return (
     <section id="payments" ref={ref} className="relative py-28 lg:py-36 overflow-hidden">

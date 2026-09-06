@@ -53,7 +53,7 @@ const compare = [
 
 export default function Pricing({ onEstimate }: { onEstimate: () => void }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [tab, setTab] = useState<'web' | 'mobile'>('web');
   const plans = tab === 'web' ? web : mobile;
 

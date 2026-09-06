@@ -38,7 +38,7 @@ const BLACKLIST = [
 
 export default function AuditBand() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
 
   const [url, setUrl] = useState('');
   const [err, setErr] = useState('');
@@ -264,7 +264,7 @@ export default function AuditBand() {
                       setUrl(sample);
                       if (err) setErr('');
                     }}
-                    className="t-mono text-xs text-paper/60 border border-paper/15 px-2.5 py-1 hover:border-lime hover:text-lime transition-colors"
+                    className="t-mono text-xs text-paper/70 border border-paper/20 px-3 py-2 min-h-[36px] flex items-center hover:border-lime hover:text-lime transition-colors"
                   >
                     {sample}
                   </button>

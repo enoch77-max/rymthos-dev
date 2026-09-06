@@ -81,7 +81,7 @@ function Detail({ s }: { s: typeof services[0] }) {
 
 export default function Services() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [active, setActive] = useState(0);
   const cur = services[Math.max(active, 0)];
 

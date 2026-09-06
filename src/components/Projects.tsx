@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ExternalLink, Code2, Clock, Globe, ChevronDown, Target, Wrench, TrendingUp, Search, Sun, Menu, Minimize2, Braces } from 'lucide-react';
+import { ExternalLink, Code2, Clock, Globe, ChevronDown, Target, Wrench, TrendingUp, Search, Sun, Menu, Minimize2, Braces, Compass } from 'lucide-react';
 import BrandIcon from './BrandIcon';
 
 /* Faithful replica of 100toolcrate.com (the live site blocks iframe embedding) */
@@ -87,6 +87,142 @@ function ToolCratePreview() {
   );
 }
 
+function SalahCompanionPreview() {
+  const prayers = [
+    { name: 'Fajr', time: '04:32' },
+    { name: 'Dhuhr', time: '12:02' },
+    { name: 'Asr', time: '15:28', active: true },
+    { name: 'Maghrib', time: '18:14' },
+    { name: 'Isha', time: '19:30' },
+  ];
+  return (
+    <div className="h-[210px] bg-[#070e17] text-white p-4 flex flex-col justify-between font-sans select-none overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-bold tracking-tight text-white">Salah Companion</span>
+          <span className="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono">FLUTTER</span>
+        </div>
+        <span className="text-[10px] text-white/50 font-mono">Dhaka · Qibla 282° NW</span>
+      </div>
+
+      <div className="grid grid-cols-12 gap-3 items-center my-auto">
+        <div className="col-span-7 bg-white/[0.04] border border-white/10 p-3 rounded-lg">
+          <div className="text-[9px] text-white/50 uppercase tracking-widest font-mono mb-1">Upcoming Prayer</div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-black text-emerald-400">Asr</span>
+            <span className="text-xs text-white/70 font-mono">in 01h 14m</span>
+          </div>
+          <div className="text-[10px] text-white/60 mt-1 font-mono">Next: Maghrib at 18:14</div>
+        </div>
+
+        <div className="col-span-5 bg-white/[0.04] border border-white/10 p-2.5 rounded-lg flex flex-col items-center text-center">
+          <Compass className="w-6 h-6 text-cyan-400 animate-spin-slow mb-1" />
+          <span className="text-[10px] font-bold text-white">282° NW</span>
+          <span className="text-[8px] text-white/40 font-mono">Kaaba: 4,821 km</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-5 gap-1.5 pt-2 border-t border-white/10">
+        {prayers.map((pr) => (
+          <div
+            key={pr.name}
+            className={`p-1.5 rounded text-center border ${
+              pr.active
+                ? 'bg-emerald-500/20 border-emerald-400/60 text-emerald-300'
+                : 'bg-white/[0.02] border-white/5 text-white/60'
+            }`}
+          >
+            <div className="text-[8px] font-mono uppercase">{pr.name}</div>
+            <div className="text-[10px] font-bold mt-0.5">{pr.time}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CommerceEnginePreview() {
+  return (
+    <div className="h-[210px] bg-[#0c1017] text-white p-4 flex flex-col justify-between font-sans select-none overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-lime" />
+          <span className="text-xs font-bold tracking-tight text-white">Commerce Engine</span>
+          <span className="text-[9px] bg-lime/20 text-lime border border-lime/30 px-1.5 py-0.5 rounded font-mono">HEADLESS</span>
+        </div>
+        <span className="text-[10px] text-white/50 font-mono">3-Step Checkout · 1.2s</span>
+      </div>
+
+      <div className="grid grid-cols-12 gap-3 items-center my-auto">
+        <div className="col-span-8 space-y-2 bg-white/[0.03] border border-white/10 p-3 rounded-lg">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-white/70">Cart Subtotal (2 items)</span>
+            <span className="font-mono font-bold text-white">$189.00</span>
+          </div>
+          <div className="flex items-center gap-1.5 pt-1 border-t border-white/10 text-[9px]">
+            <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/30">1. Address</span>
+            <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded border border-emerald-500/30">2. Ship</span>
+            <span className="px-1.5 py-0.5 bg-verm text-white font-bold rounded">3. Pay</span>
+          </div>
+        </div>
+
+        <div className="col-span-4 bg-white/[0.03] border border-white/10 p-2.5 rounded-lg text-center">
+          <div className="text-[8px] text-white/40 uppercase font-mono mb-1">Abandonment</div>
+          <div className="text-base font-black text-lime">-42%</div>
+          <div className="text-[8px] text-white/50">vs Shopify default</div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[9px] text-white/60 font-mono">
+        <span>Payment Rails: Stripe · bKash · Apple Pay</span>
+        <span className="text-emerald-400 font-semibold">Zero-redirect</span>
+      </div>
+    </div>
+  );
+}
+
+function PulseAnalyticsPreview() {
+  return (
+    <div className="h-[210px] bg-[#090d14] text-white p-4 flex flex-col justify-between font-sans select-none overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-xs font-bold tracking-tight text-white">Pulse Analytics</span>
+          <span className="text-[9px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded font-mono">REALTIME BI</span>
+        </div>
+        <span className="text-[10px] text-cyan-400/80 font-mono">Live WebSocket Sync</span>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 my-auto">
+        <div className="bg-white/[0.04] border border-white/10 p-2.5 rounded-lg">
+          <div className="text-[8px] text-white/50 uppercase font-mono">Monthly Revenue</div>
+          <div className="text-sm lg:text-base font-black text-white mt-0.5">$42,850</div>
+          <div className="text-[9px] text-emerald-400 font-mono mt-0.5">&uarr; +18.4%</div>
+        </div>
+        <div className="bg-white/[0.04] border border-white/10 p-2.5 rounded-lg">
+          <div className="text-[8px] text-white/50 uppercase font-mono">Active Users</div>
+          <div className="text-sm lg:text-base font-black text-white mt-0.5">12,410</div>
+          <div className="text-[9px] text-cyan-400 font-mono mt-0.5">&uarr; +240 live</div>
+        </div>
+        <div className="bg-white/[0.04] border border-white/10 p-2.5 rounded-lg">
+          <div className="text-[8px] text-white/50 uppercase font-mono">Net Retention</div>
+          <div className="text-sm lg:text-base font-black text-white mt-0.5">114%</div>
+          <div className="text-[9px] text-emerald-400 font-mono mt-0.5">Top decile</div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[9px] text-white/50 font-mono">
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span className="text-white/70">1,824 queries/sec processed</span>
+        </div>
+        <span className="text-cyan-400">PostgreSQL · GraphQL</span>
+      </div>
+    </div>
+  );
+}
+
 const projects = [
   {
     num: '01', title: '100ToolCrate', year: '2024', type: 'Tooling Platform',
@@ -146,7 +282,7 @@ const statusStyle: Record<string, string> = {
 
 export default function Projects() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '120px 0px' });
+  const inView = useInView(ref, { once: true, margin: '600px 0px' });
   const [open, setOpen] = useState<number | null>(null);
 
   return (
@@ -209,26 +345,22 @@ export default function Projects() {
                           : 'in development'}
                     </span>
                   </div>
-                  {p.live ? (
+                  {p.num === '01' ? (
                     /* faithful replica — the live site blocks iframe embedding */
                     <div className="relative h-[248px] overflow-hidden">
                       <ToolCratePreview />
                     </div>
-                  ) : p.mobile ? (
-                    /* phone placeholder, live preview coming later */
-                    <div className="relative h-44 overflow-hidden bg-[#0b1220]">
-                      <div className="absolute left-1/2 top-3 -translate-x-1/2 w-24 h-40 rounded-xl border-2 border-white/15 bg-[#101a2e] p-2">
-                        <div className="h-1.5 w-10 bg-white/20 rounded mx-auto mb-2" />
-                        <div className="h-8 rounded-md bg-emerald-400/20 mb-1.5" />
-                        <div className="h-3 w-3/4 bg-white/15 rounded mb-1" />
-                        <div className="h-3 w-1/2 bg-white/10 rounded mb-2" />
-                        <div className="grid grid-cols-3 gap-1">
-                          <div className="h-5 rounded bg-white/10" />
-                          <div className="h-5 rounded bg-white/10" />
-                          <div className="h-5 rounded bg-white/10" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 right-2 t-label text-white/50">PREVIEW SOON</div>
+                  ) : p.num === '02' ? (
+                    <div className="relative h-[210px] overflow-hidden">
+                      <SalahCompanionPreview />
+                    </div>
+                  ) : p.num === '03' ? (
+                    <div className="relative h-[210px] overflow-hidden">
+                      <CommerceEnginePreview />
+                    </div>
+                  ) : p.num === '04' ? (
+                    <div className="relative h-[210px] overflow-hidden">
+                      <PulseAnalyticsPreview />
                     </div>
                   ) : (
                     <div className="relative h-20 p-3.5 overflow-hidden">
