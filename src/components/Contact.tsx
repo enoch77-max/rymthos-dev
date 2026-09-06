@@ -250,31 +250,31 @@ export default function Contact({ onOpenLegal }: { onOpenLegal: (d: LegalDoc) =>
               <form onSubmit={submit} className="bg-card border-2 border-ink hard-shadow p-8 lg:p-10 space-y-7">
                 <div className="grid sm:grid-cols-2 gap-7">
                   <div>
-                    <label className={label}>Your name</label>
-                    <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={field} placeholder="Jane Founder" />
+                    <label htmlFor="name" className={label}>Your name</label>
+                    <input id="name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={field} placeholder="Jane Founder" />
                   </div>
                   <div>
-                    <label className={label}>Email</label>
-                    <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={field} placeholder="jane@brand.com" />
+                    <label htmlFor="email" className={label}>Email</label>
+                    <input id="email" required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={field} placeholder="jane@brand.com" />
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-7">
                   <div>
-                    <label className={label}>Project type</label>
-                    <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className={`${field} appearance-none cursor-pointer`}>
+                    <label htmlFor="project-type" className={label}>Project type</label>
+                    <select id="project-type" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className={`${field} appearance-none cursor-pointer`}>
                       {['Website', 'E-Commerce', 'Mobile App', 'Web App', 'Branding', 'Other'].map((o) => <option key={o}>{o}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className={label}>Budget</label>
-                    <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className={`${field} appearance-none cursor-pointer`}>
+                    <label htmlFor="budget" className={label}>Budget</label>
+                    <select id="budget" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className={`${field} appearance-none cursor-pointer`}>
                       {['Under $200', '$200–$500', '$500–$1,000', '$1,000–$2,500', '$2,500+'].map((o) => <option key={o}>{o}</option>)}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className={label}>The vision</label>
-                  <textarea required rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${field} resize-none`} placeholder="Goals, timeline, references. Anything that helps us quote accurately." />
+                  <label htmlFor="message" className={label}>The vision</label>
+                  <textarea id="message" required rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${field} resize-none`} placeholder="Goals, timeline, references. Anything that helps us quote accurately." />
                 </div>
 
                 {/* honeypot — invisible to people, irresistible to bots */}
