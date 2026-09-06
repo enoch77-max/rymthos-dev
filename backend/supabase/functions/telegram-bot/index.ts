@@ -5,7 +5,8 @@ import { SECRETS } from "../_shared/secrets.ts";
 const TELEGRAM_BOT_TOKEN = SECRETS.TELEGRAM_BOT_TOKEN;
 const FOUNDER_CHAT_ID = String(SECRETS.TELEGRAM_CHAT_ID || "1352655812");
 const OPENROUTER_API_KEY = SECRETS.OPENROUTER_API_KEY;
-const OPENROUTER_MODEL = SECRETS.OPENROUTER_MODEL || "deepseek/deepseek-v4-flash";
+const OPENROUTER_MODEL = SECRETS.OPENROUTER_MODEL || "deepseek/deepseek-v4-flash-0731";
+const PRO_MODEL = "deepseek/deepseek-v4-pro-0813";
 const VISION_EXP_MODEL = "deepseek/deepseek-v4-flash-vision-exp";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://rqiynsrdmrjdbyewecjq.supabase.co";
@@ -123,7 +124,7 @@ serve(async (req) => {
       return new Response("OK", { status: 200 });
     }
 
-    // 6. Deep Pentest Command Trigger (/pentest <url> or /audit <url>)
+    // 6. Deep Pentest Command Trigger (/pentest <url> or /audit <url> or /pentest pro <url>)
     const urlMatch = text.match(/(?:https?:\/\/)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)/i);
     const isExplicitAuditCmd =
       text.startsWith("/pentest") ||
@@ -132,7 +133,8 @@ serve(async (req) => {
       text.toLowerCase().startsWith("audit ");
 
     if (isExplicitAuditCmd && urlMatch) {
-      await handleDeepPentest(chatId, urlMatch[1]);
+      const isPro = /\bpro\b/i.test(text);
+      await handleDeepPentest(chatId, urlMatch[1], isPro);
       return new Response("OK", { status: 200 });
     }
 
@@ -331,7 +333,7 @@ function isBlockedHost(host: string): boolean {
 // =========================================================================
 // Deep Pentest & Executive Client-Closing Dossier Engine
 // =========================================================================
-async function handleDeepPentest(chatId: number | string, rawDomain: string) {
+async function handleDeepPentest(chatId: number | string, rawDomain: string, usePro = false) {
   const domain = rawDomain.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
 
   if (isBlockedHost(domain)) {
@@ -342,13 +344,16 @@ async function handleDeepPentest(chatId: number | string, rawDomain: string) {
     return;
   }
 
+  const selectedModel = usePro ? PRO_MODEL : OPENROUTER_MODEL;
+  const modelLabel = usePro ? "DeepSeek V4 Pro (0813)" : "DeepSeek V4 Flash (0731)";
+
   const targetUrl = "https://" + domain;
 
   await sendTelegram(
     chatId,
     "🔬 <b>Initiating Deep Vulnerability & Visual Inspection...</b>\n" +
     "Target: <code>" + domain + "</code>\n" +
-    "Model: <code>" + VISION_EXP_MODEL + "</code>"
+    "Engine: <code>" + modelLabel + "</code>"
   );
 
   let telemetry: Record<string, unknown> = { domain, url: targetUrl };
@@ -435,7 +440,7 @@ async function handleDeepPentest(chatId: number | string, rawDomain: string) {
         Authorization: "Bearer " + OPENROUTER_API_KEY,
       },
       body: JSON.stringify({
-        model: VISION_EXP_MODEL,
+        model: selectedModel,
         messages: [{ role: "user", content: prompt }],
         temperature: 0.35,
         max_tokens: 850,
