@@ -7,9 +7,9 @@ export const WA_NUMBER = '8801400788738';
 export const BD_WA_NUMBER = '8801400788738';
 export const EMAIL = 'rymthos.dev@gmail.com';
 
-// Backend endpoints. Set VITE_LEAD_API and VITE_AUDIT_API env vars when deploying
-// the frontend to point to your deployed Supabase Edge Functions.
-// Falls back to /api/lead and /api/audit; on failure the form quietly
-// uses Web3Forms + WhatsApp and client-side heuristics so nothing ever fails.
-export const API_ENDPOINT: string = import.meta.env.VITE_LEAD_API || '/api/lead';
-export const AUDIT_ENDPOINT: string = import.meta.env.VITE_AUDIT_API || '/api/audit';
+// Backend endpoints pointing to live Supabase Edge Functions on project rqiynsrdmrjdbyewecjq.
+// Can also be overridden at build time via VITE_LEAD_API and VITE_AUDIT_API env vars.
+export const API_ENDPOINT: string =
+  import.meta.env.VITE_LEAD_API || 'https://rqiynsrdmrjdbyewecjq.supabase.co/functions/v1/lead-pipeline';
+export const AUDIT_ENDPOINT: string =
+  import.meta.env.VITE_AUDIT_API || 'https://rqiynsrdmrjdbyewecjq.supabase.co/functions/v1/web-audit';
